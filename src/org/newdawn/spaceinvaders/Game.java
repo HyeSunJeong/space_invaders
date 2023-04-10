@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
-
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import org.newdawn.spaceinvaders.entity.*;
@@ -79,7 +77,6 @@ public class Game extends Canvas
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
 	private JFrame container; // game
-	private JFrame Main_frame; // main_view
 	/**
 	 * Construct our game and set it running.
 	 */
@@ -394,7 +391,7 @@ public class Game extends Canvas
 	 * 
 	 * @author Kevin Glass
 	 */
-	private class KeyInputHandler extends KeyAdapter {
+	public class KeyInputHandler extends KeyAdapter {
 		/** The number of key presses we've had while waiting for an "any key" press */
 		private int pressCount = 1;
 		
