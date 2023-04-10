@@ -4,20 +4,21 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
+
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-import org.newdawn.spaceinvaders.entity.AlienEntity;
-import org.newdawn.spaceinvaders.entity.Entity;
-import org.newdawn.spaceinvaders.entity.ShipEntity;
-import org.newdawn.spaceinvaders.entity.ShotEntity;
+import org.newdawn.spaceinvaders.entity.*;
+
+import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 /**
  * The main hook of our game. This class with both act as a manager
@@ -47,6 +48,7 @@ public class Game extends Canvas
 	/** The entity representing the player */
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
+	private Entity Heart;
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
@@ -54,7 +56,9 @@ public class Game extends Canvas
 	private long firingInterval = 500;
 	/** The number of aliens left on the screen */
 	private int alienCount;
-	
+	private int Heart_count = 2;
+
+
 	/** The message to display which waiting for a key press */
 	private String message = "";
 	/** True if we're holding up game play until a key has been pressed */
@@ -74,12 +78,13 @@ public class Game extends Canvas
 	/** The normal title of the game window */
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
-	private JFrame container;
-	
+	private JFrame container; // game
+	private JFrame Main_frame; // main_view
 	/**
 	 * Construct our game and set it running.
 	 */
-	public Game() {
+	public Game() throws IOException {
+
 		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
 		
@@ -125,6 +130,7 @@ public class Game extends Canvas
 		// to see at startup
 		initEntities();
 	}
+
 	
 	/**
 	 * Start a fresh game, this should clear out any old data and
@@ -149,7 +155,22 @@ public class Game extends Canvas
 		// create the player ship and place it roughly in the center of the screen
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
-		
+
+		// Player information
+		Heart_count = 2;
+		for(int i = 1 ; i < 4 ; i++) {
+			if(i<=Heart_count){
+				Heart = new Heart_gui(this, "sprites/heart.png", 565 + 35 * i, 10);
+				entities.add(Heart);
+			}
+			else {
+				Heart = new Heart_gui(this, "sprites/heart_gray.png", 565 + 35 * i, 10);
+				entities.add(Heart);
+			}
+		}
+
+
+
 		// create a block of aliens (5 rows, by 12 aliens, spaced evenly)
 		alienCount = 0;
 		for (int row=0;row<5;row++) {
@@ -465,7 +486,7 @@ public class Game extends Canvas
 	 * 
 	 * @param argv The arguments that are passed into our game
 	 */
-	public static void main(String argv[]) {
+	public static void main(String argv[]) throws IOException {
 		Game g = new Game();
 
 		// Start the main game loop, note: this method will not

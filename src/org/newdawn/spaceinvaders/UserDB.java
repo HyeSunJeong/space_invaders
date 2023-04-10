@@ -1,13 +1,10 @@
 package org.newdawn.spaceinvaders;
 
-import sun.security.mscapi.CPublicKey;
-
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import javax.swing.*;
-import javax.swing.JPanel;
 
 public class UserDB extends JFrame implements ActionListener {
 
