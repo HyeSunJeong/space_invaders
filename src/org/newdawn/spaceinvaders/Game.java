@@ -46,6 +46,8 @@ public class Game extends Canvas
 	/** The entity representing the player */
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
+
+	private Entity coin;
 	private Entity Heart;
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
@@ -55,7 +57,6 @@ public class Game extends Canvas
 	/** The number of aliens left on the screen */
 	private int alienCount;
 	private int Heart_count = 2;
-
 
 	/** The message to display which waiting for a key press */
 	private String message = "";
@@ -77,10 +78,12 @@ public class Game extends Canvas
 	private String windowTitle = "Space Invaders 102";
 	/** The game window that we'll update with the frame count */
 	private JFrame container; // game
+
+	private int coin_count;
 	/**
 	 * Construct our game and set it running.
 	 */
-	public Game() throws IOException {
+	public Game() {
 
 		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
@@ -153,6 +156,16 @@ public class Game extends Canvas
 		ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		entities.add(ship);
 
+		coin = new CoinEntity(this,"sprites/coin.png",250,300);
+		entities.add(coin);
+		coin_count = 1;
+		for (int i=0; i<coin_count; i++) {
+			for (int x=0; x<12; x++) {
+				Entity coin = new CoinEntity(this,100+(x*50),(50)+i*30);
+				entities.add(coin);
+				alienCount++;
+			}
+
 		// Player information
 		Heart_count = 2;
 		for(int i = 1 ; i < 4 ; i++) {
@@ -221,6 +234,7 @@ public class Game extends Canvas
 	public void notifyAlienKilled() {
 		// reduce the alient count, if there are none left, the player has won!
 		alienCount--;
+		// score = 50;
 		
 		if (alienCount == 0) {
 			notifyWin();

@@ -27,6 +27,9 @@ public abstract class Entity {
 	/** The sprite that represents this entity */
 	protected Sprite sprite;
 	/** The current speed of this entity horizontally (pixels/sec) */
+
+
+
 	protected double dx;
 	/** The current speed of this entity vertically (pixels/sec) */
 	protected double dy;
@@ -110,8 +113,8 @@ public abstract class Entity {
 	 * will be called periodically based on game events
 	 */
 	public void doLogic() {
+
 	}
-	
 	/**
 	 * Get the x location of this entity
 	 * 
