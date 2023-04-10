@@ -45,7 +45,8 @@ public class ShipEntity extends Entity {
 		
 		super.move(delta);
 	}
-	
+
+
 	/**
 	 * Notification that the player's ship has collided with something
 	 * 

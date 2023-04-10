@@ -44,11 +44,14 @@ public class Game extends Canvas
 	/** The list of entities that need to be removed from the game this loop */
 	private ArrayList removeList = new ArrayList();
 	/** The entity representing the player */
+
+	private boolean Heart_recovery = false;
+	private boolean Boost_item = false;
 	private Entity ship;
 	/** The speed at which the player's ship should move (pixels/sec) */
 
 	private Entity coin;
-	private Entity Heart;
+	private  Entity[] Heart = new Entity[3];
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
@@ -164,12 +167,12 @@ public class Game extends Canvas
 		Heart_count = 2;
 		for(int i = 1 ; i < 4 ; i++) {
 			if(i<=Heart_count){
-				Heart = new Heart_gui(this, "sprites/heart.png", 565 + 35 * i, 10);
-				entities.add(Heart);
+				Heart[i-1] = new Heart_gui(this, "sprites/heart.png", 565 + 35 * i, 10);
+				entities.add(Heart[i-1]);
 			}
 			else {
-				Heart = new Heart_gui(this, "sprites/heart_gray.png", 565 + 35 * i, 10);
-				entities.add(Heart);
+				Heart[i-1] = new Heart_gui(this, "sprites/heart_gray.png", 565 + 35 * i, 10);
+				entities.add(Heart[i-1]);
 			}
 		}
 
@@ -259,10 +262,30 @@ public class Game extends Canvas
 
 		// if we waited long enough, create the shot entity, and record the time.
 		lastFire = System.currentTimeMillis();
-		ShotEntity shot = new ShotEntity(this,"sprites/shot.gif",ship.getX()+10,ship.getY()-30);
+		ShotEntity shot = new ShotEntity(this, "sprites/shot.gif", ship.getX() + 10, ship.getY() - 30);
 		entities.add(shot);
 	}
 
+	public void notify_heart_change(int Heart_num){
+		Heart_count = Heart_num;
+
+		removeEntity(Heart[0]);
+		removeEntity(Heart[1]);
+		removeEntity(Heart[2]);
+
+
+		for(int i = 1 ; i < 4 ; i++) {
+			if(i<=Heart_count){
+				Heart[i-1] = new Heart_gui(this, "sprites/heart.png", 565 + 35 * i, 10);
+				entities.add(Heart[i-1]);
+			}
+			else {
+				Heart[i-1] = new Heart_gui(this, "sprites/heart_gray.png", 565 + 35 * i, 10);
+				entities.add(Heart[i-1]);
+			}
+		}
+
+	}
 	/**
 	 * The main game loop. This loop is running during all game
 	 * play as is responsible for the following activities:
@@ -427,6 +450,14 @@ public class Game extends Canvas
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = true;
 			}
+			if (e.getKeyChar() == KeyEvent.VK_1){
+				Heart_recovery = true;
+				notify_heart_change(3);
+			}
+			if (e.getKeyChar() == KeyEvent.VK_2){
+				Boost_item = true;
+				moveSpeed = 1000;
+			}
 		}
 
 		/**
@@ -449,6 +480,13 @@ public class Game extends Canvas
 			}
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = false;
+			}
+			if (e.getKeyChar() == KeyEvent.VK_1){
+				Heart_recovery = false;
+			}
+			if (e.getKeyChar() == KeyEvent.VK_2){
+				Boost_item = false;
+				moveSpeed = 300;
 			}
 		}
 

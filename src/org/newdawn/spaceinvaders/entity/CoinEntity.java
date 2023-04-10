@@ -10,7 +10,7 @@ import org.newdawn.spaceinvaders.Game;
 public class CoinEntity extends Entity {
     /** The game in which the ship exists */
     private Game game;
-
+    private double moveSpeed = 100;
     /**
      * Create a new entity to represent the players ship
      *
@@ -23,6 +23,8 @@ public class CoinEntity extends Entity {
         super(ref,x,y);
 
         this.game = game;
+
+        dy = moveSpeed;
     }
 
     /**

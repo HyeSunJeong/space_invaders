@@ -30,20 +30,7 @@ public class Heart_gui extends Entity {
      *
      * @param delta The time that has elapsed since last move (ms)
      */
-    public void move(long delta) {
-        // if we're moving left and have reached the left hand side
-        // of the screen, don't move
-        if ((dx < 0) && (x < 10)) {
-            return;
-        }
-        // if we're moving right and have reached the right hand side
-        // of the screen, don't move
-        if ((dx > 0) && (x > 750)) {
-            return;
-        }
 
-        super.move(delta);
-    }
 
     /**
      * Notification that the player's ship has collided with something
