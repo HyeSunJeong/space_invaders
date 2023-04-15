@@ -113,8 +113,7 @@ public class Game extends Canvas
 
 		// finally make the window visible
 		container.pack();
-		if(!UserDB.is_logged_in) {container.setLocationRelativeTo(null);}
-		else {container.setLocation(LoginFrame.frameLocation);}
+		container.setLocationRelativeTo(null);
 		container.setResizable(false);
 		container.setVisible(true);
 
