@@ -122,7 +122,7 @@ public class AlienEntity extends Entity {
 			game.sp.playSE(10,5);
 			double a = Math.random();
 			if(UserDB.selected_ship ==2){
-				if(a>0){
+				if(a>0.7){
 					game.SpawnCoin(this.getX(), this.getY());
 				}
 			}

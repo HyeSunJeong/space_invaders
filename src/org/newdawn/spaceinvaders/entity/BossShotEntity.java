@@ -8,14 +8,10 @@ import org.newdawn.spaceinvaders.Game;
  * @author Kevin Glass
  */
 public class BossShotEntity extends Entity {
-    /** The vertical speed at which the players shot moves */
-    private double moveSpeed = 300;
-    /** The game in which this entity exists */
     private Game game;
     /** True if this shot has been "used", i.e. its hit something */
     private boolean used = false;
 
-    private  double fallowX = 110;
 
     /**
      * Create a new shot from the player

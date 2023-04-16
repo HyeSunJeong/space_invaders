@@ -172,7 +172,6 @@ public class BossEntity extends Entity {
     public void setHp(int hp){this.hp = hp;}
 
     public boolean getHit(){return  gotHit;}
-    public boolean getImmortal(){return  immortal;}
     public void setHit(boolean hit){this.gotHit = hit;}
 
     /**

@@ -69,7 +69,6 @@ public class ItemUi extends Entity {
                         game.sp.playSE(12,5);
                         break;
                     case other:
-
                         break;
             }
             game.removeEntity(this);
