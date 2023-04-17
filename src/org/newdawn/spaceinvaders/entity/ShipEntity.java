@@ -11,9 +11,7 @@ import org.newdawn.spaceinvaders.Game;
 public class ShipEntity extends Entity {
 	/** The game in which the ship exists */
 	private Game game;
-
 	private int hp=5;
-
 	private boolean gotHit;
 	
 	/**
