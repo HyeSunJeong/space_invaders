@@ -37,7 +37,6 @@ public abstract class Entity {
 	private int hp;
 	private boolean gotHit;
 
-	private boolean immortal;
 
 
 	/**
@@ -125,9 +124,6 @@ public abstract class Entity {
 		return (int) x;
 	}
 
-	public boolean getImmortal() {
-		return immortal;
-	}
 	/**
 	 * Get the y location of this entity
 	 * 
@@ -163,5 +159,4 @@ public abstract class Entity {
 	 */
 	public abstract void collidedWith(Entity other);
 
-	public  void RemoveThis(){};
 }
