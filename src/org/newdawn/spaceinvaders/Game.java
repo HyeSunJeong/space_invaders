@@ -50,10 +50,7 @@ public class Game extends Canvas
 	int HPcooldownCheck;
 	int SPcooldownCheck;
 
-	int reflectCheck;
-
 	private int score; /** 게임 스코어 **/
-
 
 	/** The stragey that allows us to use accelerate page flipping */
 	private BufferStrategy strategy;
@@ -69,13 +66,11 @@ public class Game extends Canvas
 	private Entity boss; //보스 생성
 	private Entity coidUI;
 	private Entity coinPrefab;
-
 	private  Entity[] bossHpUi = new Entity[150];
 	private Entity[] playerHpUI = new Entity[10];
 	private Entity obstacle;
 	private Entity bossHpBar;
 	private Entity alien;
-
 	private Entity[] itemUi = new Entity[4];
 	private Entity stageUI ;
 	/**화면에 남은 보스 수 **/
@@ -84,7 +79,7 @@ public class Game extends Canvas
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
 	private long lastUseSpeedPotion= 0;
-	private long lastAddRoundUI = 0;
+
 	private long lastUseHealPotion=0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 200;
