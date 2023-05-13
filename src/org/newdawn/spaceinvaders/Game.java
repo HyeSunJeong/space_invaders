@@ -113,7 +113,7 @@ public class Game extends Canvas
 
 
 	private Boolean bossAlive = false;
-	public int stage=1;
+	public int stage=2;
 
 	private boolean isStageUi = false;
 
@@ -125,7 +125,7 @@ public class Game extends Canvas
 	private double reflectCooldown = 0.5;
 	private BufferedImage round1,round2,round3,round4,round5;
 
-	double addRound = 0;
+	double addRound = 2;
 
 
 	/**
@@ -211,9 +211,9 @@ public class Game extends Canvas
 	 */
 	private void initEntities() {
 		AddShip();
-		AddAlien();
-		//AddBoss(100);
-		//AddBossHp(100);
+		//AddAlien();
+		AddBoss(100);
+		AddBossHp(100);
 		AddPlayerHpUI(ship.getHp());
 		AddCoidUI();
 		Addicon();
@@ -479,6 +479,21 @@ public class Game extends Canvas
 			}
 		}
 	}
+
+//	public void BossUlti1(int timer){
+//		if(!bossAlive){
+//			return;
+//		}
+//		if((stage ==2)||(stage ==4) ||(stage==5) ){
+//			if(timer %300 ==0){
+//				for(int i=-5; i<=5; i++){
+//					BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
+//					entities.add(shot);
+//					shot.shotXMove(35*i,100);
+//				}
+//			}
+//		}
+//	}
 	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		int randomObstacle = (int) (Math.random() * 5); // 0~4까지의 랜덤한 정수
 		if(!bossAlive){
@@ -703,12 +718,11 @@ public class Game extends Canvas
 				BossReflectMode(timer); /**보스 데미지 반사**/
 				BossHpDeal();/**보스 hp ui**/
 				shipGotHit();/** 플레이어 피격**/
-				// we want each frame to take 10 milliseconds, to do this
-				// we've recorded when we started the frame. We add 10 milliseconds
-				// to this and then factor in the current time to give
-				// us our final value to wait for
+				BossUlti(timer);/**보스 공격패턴1**/
+				//BossUlti1(timer);/**보스 공격패턴2**/
+
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
-				BossUlti(timer);
+
 				if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime){
 					ChangeHealPotionIcon();
 				}
@@ -1017,11 +1031,7 @@ public class Game extends Canvas
 	 * @param argv The arguments that are passed into our game
 	 */
 	public static void main(String argv[]) {
-//		//UserDB.is_logged_in = true;
 		Game g = new Game(new GameLobbyPanel());
-		// Start the main game loop, note: this method will not
-		// return until the game has finished running. Hence we are
-		// using the actual main thread to run the game.
 		g.gameLoop();
 	}
 }
