@@ -459,20 +459,20 @@ public class Game extends Canvas
 		}
 	}
 
-//	public void BossUlti1(int timer){
-//		if(!bossAlive){
-//			return;
-//		}
-//		if((stage ==2)||(stage ==4) ||(stage==5) ){
-//			if(timer %300 ==0){
-//				for(int i=-5; i<=5; i++){
-//					BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
-//					entities.add(shot);
-//					shot.shotXMove(35*i,100);
-//				}
-//			}
-//		}
-//	}
+	public void BossUlti1(int timer){
+		if(!bossAlive){
+			return;
+		}
+		if((stage ==2)||(stage ==4) ||(stage==5) ){
+			if(timer %111 ==0){
+				for(int i=-5; i<=5; i++){
+					BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
+					entities.add(shot);
+					shot.shotXMove(35*i,100);
+				}
+			}
+		}
+	}
 	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		int randomObstacle = (int) (Math.random() * 5); // 0~4까지의 랜덤한 정수
 		if(!bossAlive){
@@ -696,8 +696,8 @@ public class Game extends Canvas
 				BossReflectMode(timer); /**보스 데미지 반사**/
 				BossHpDeal();/**보스 hp ui**/
 				shipGotHit();/** 플레이어 피격**/
-				BossUlti(timer);/**보스 공격패턴1**/
-				//BossUlti1(timer);/**보스 공격패턴2**/
+				//BossUlti(timer);/**보스 공격패턴1**/
+				BossUlti1(timer);/**보스 공격패턴2**/
 
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 
