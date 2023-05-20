@@ -1,11 +1,6 @@
 package org.newdawn.spaceinvaders;
 
-
-import java.awt.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.*;
-
 
 public final class UserDB {
 
@@ -25,7 +20,7 @@ public final class UserDB {
     public static int HP_potion = 0;
     public static int speed_potion = 0;
     public static int selected_ship = 0;
-    public static boolean isFirstPlay = true;
+    public static boolean is_first_play = true;
     //DB 저장용은 아님
     public static boolean is_logged_in = false;
 
@@ -58,6 +53,7 @@ public final class UserDB {
         speed_potion = 0;
         selected_ship = 0;
     }
+
     private UserDB() {
 
     }

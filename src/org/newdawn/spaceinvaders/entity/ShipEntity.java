@@ -67,6 +67,7 @@ public class ShipEntity extends Entity {
 	public void collidedWith(Entity other) {
 		if (other instanceof BossShotEntity ) {
 			this.hp--;
+			game.sp.playSE(11,-10f);
 			gotHit =true;
 			if(this.hp<=0){
 				game.removeEntity(this);
@@ -75,6 +76,7 @@ public class ShipEntity extends Entity {
 		}
 		else if(other instanceof ObstacleEntity){
 			this.hp--;
+			game.sp.playSE(11,-10f);
 			gotHit=true;
 			if(this.hp<=0){
 				game.removeEntity(this);

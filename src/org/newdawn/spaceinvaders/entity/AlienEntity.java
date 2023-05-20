@@ -119,6 +119,7 @@ public class AlienEntity extends Entity {
 	public void collidedWith(Entity other) {
 		if(other instanceof ShotEntity){
 			gotHit = true;
+			game.sp.playSE(10,5);
 			double a = Math.random();
 			if(UserDB.selected_ship ==2){
 				if(a>0){
