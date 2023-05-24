@@ -66,6 +66,7 @@ public class ItemUi extends Entity {
                 switch (item){
                     case coin:
                         UserDB.coin++;
+                        game.sp.playSE(12,5);
                         break;
                     case other:
                         break;

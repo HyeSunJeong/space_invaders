@@ -15,7 +15,7 @@ public class MainUI extends JPanel {
     GameLobbyPanel glp;
     BufferedImage background, gameLogo, satellite, gameLogo_shadow, choiceButton;
     BufferedImage coinImg, healPotion, speedPotion, hardShip, luckShip, tutorialWindow, dialogWindow;
-    BufferedImage userWindow, basicShip;
+    BufferedImage basicShip;
     Color lightRed = new Color(250,90,90);
     public int commandNum = 0;
     public boolean coinLackState = false;
@@ -84,7 +84,6 @@ public class MainUI extends JPanel {
     }
 
     public void drawTitleScreen(){
-
         g2.drawImage(background,0,0,null);
         g2.drawImage(gameLogo_shadow,231,145,null);
         g2.drawImage(gameLogo,225,139,null);
@@ -914,16 +913,6 @@ public class MainUI extends JPanel {
         g2.setColor(Color.white);
     }
 
-    public void setFontNeo(JComponent jc,float size){
-        try {
-            InputStream is = getClass().getResourceAsStream("fonts/NeoDunggeunmoPro-Regular.ttf");
-            NeoDung = Font.createFont(Font.TRUETYPE_FONT, is).deriveFont(Font.PLAIN,size);
-        } catch (FontFormatException | IOException e) {
-            e.printStackTrace();
-        }
-        jc.setFont(NeoDung);
-    }
-
     public void loadTitleImg() {
         try {
             //타이틀 이미지 로딩
@@ -959,6 +948,7 @@ public class MainUI extends JPanel {
             e.printStackTrace();
         }
     }
+
 
 }
 

@@ -7,6 +7,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -108,6 +109,7 @@ public class Game extends Canvas
 	private JFrame container;
 	//private LoginFrame lf;
 	GameLobbyPanel glp;
+	public SoundPlayer sp = new SoundPlayer();
 
 
 	private Boolean bossAlive = false;
@@ -197,6 +199,7 @@ public class Game extends Canvas
 		rightPressed = false;
 		firePressed = false;
 		escPressed= false;
+		//sp.playMusic(0,0);
 
 	}
 
@@ -215,6 +218,7 @@ public class Game extends Canvas
 		AddCoidUI();
 		Addicon();
 		AddRound();
+
 	}
 
 	public void AddRound(){
@@ -294,6 +298,7 @@ public class Game extends Canvas
 		entities.add(boss);
 		bossAlive = true;
 		boss.setHp(hp);
+		sp.playSE(6,0);
 	}
 
 	/**보스 HP UI**/
@@ -418,7 +423,7 @@ public class Game extends Canvas
 		lastFire = System.currentTimeMillis();
 		ShotEntity shot = new ShotEntity(this,"sprites/shot.gif",ship.getX()+10,ship.getY()-30);
 		entities.add(shot);
-
+		sp.playSE(16,-10);
 	}
 
 	/** 단게별 보스 패턴 **/
@@ -438,6 +443,7 @@ public class Game extends Canvas
 			BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
 			shot.shotXMove(ship.getX() - shot.getX(),300);
+			sp.playSE(19,-10);
 		}
 	}
 
@@ -455,6 +461,7 @@ public class Game extends Canvas
 				BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot2);
 				shot2.shotXMove(coss*300*-1,200);
+				sp.playSE(7,0);
 			}
 		}
 	}
@@ -478,6 +485,7 @@ public class Game extends Canvas
 		if(!bossAlive){
 			return;}
 		if((stage ==3)||(stage==5)){
+			sp.playSE(15,0);
 			if (randomObstacle == 0) {
 				obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_blue_moon.png",(int)(Math.random()*750),10);
 			}
@@ -755,6 +763,7 @@ public class Game extends Canvas
 			itemUi[1] = new GameUi(this,"sprites/used_heal_potion.png",20,550);
 			entities.add(itemUi[1]);
 			usedHealPotion = true;
+			sp.playSE(17,0);
 	}
 	public void ChangeHealPotionIcon(){
 		if (usedHealPotion) {
@@ -786,6 +795,7 @@ public class Game extends Canvas
 		itemUi[3] = new GameUi(this,"sprites/used_speed_potion.png",50,550);
 		entities.add(itemUi[3]);
 		usedSpeedPotion = true;
+		sp.playSE(18,0);
 	}
 	public void ReturnMoveSpeed(){
 			moveSpeed = 300;

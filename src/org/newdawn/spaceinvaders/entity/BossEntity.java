@@ -151,6 +151,7 @@ public class BossEntity extends Entity {
     public void ImmortallityCheck(int timer){
         if(timer %800 ==0){
             immortal = true;
+            game.sp.playSE(9,0);
         }
         else if(timer %1000 == 0){
             immortal = false;
@@ -160,10 +161,11 @@ public class BossEntity extends Entity {
         if(timer %800 ==0){
             reflect = true;
             immortal = true;
+            game.sp.playSE(8,0);
         }
         else if(timer %1000 == 0){
             reflect = false;
-            immortal =false;
+            immortal = false;
         }
     }
     public int getHp(){return (int)hp;}
@@ -179,15 +181,16 @@ public class BossEntity extends Entity {
      */
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
-            if(immortal ==false ){
+            if(!immortal){
                 hp--;
+                game.sp.playSE(10,5);
                 gotHit = true;
                 if(hp<=0){
                     game.notifyBossKilled();
                     game.removeEntity(this);
                 }
             }
-            else if(reflect  == true){
+            else if(reflect){
                 game.bossReflectStart();
             }
         }

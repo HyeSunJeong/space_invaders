@@ -24,6 +24,7 @@ public class UIKeyHandler extends KeyAdapter {
 
         //타이틀 화면 조작
         if (glp.gameState == glp.titleState && !glp.mu.dialogState) {
+            glp.sp.playSE(1,0);
             if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
                 if (glp.mu.commandNum == -2) {
                     glp.mu.commandNum = 0;
@@ -72,7 +73,7 @@ public class UIKeyHandler extends KeyAdapter {
             if (code == KeyEvent.VK_ENTER || code == KeyEvent.VK_SPACE) {
 
                 if (glp.mu.commandNum == 0) {
-                    if(UserDB.isFirstPlay) {
+                    if(UserDB.is_first_play) {
                         glp.gameState = glp.tutorialState;
                         glp.mu.commandNum = -1;
                     }
@@ -90,10 +91,14 @@ public class UIKeyHandler extends KeyAdapter {
                 }
 
                 if (glp.mu.commandNum == 3) {
-                    saveGame();
-                    glp.mu.commandNum = -1;
-                    glp.mu.dialogState = true;
-                    glp.mu.exitConfirmState = true;
+                    if (UserDB.is_logged_in) {
+                        saveGame();
+                        glp.mu.commandNum = -1;
+                        glp.mu.dialogState = true;
+                        glp.mu.exitConfirmState = true;
+                    } else {
+                        System.exit(0);
+                    }
                 }
 
                 if (glp.mu.commandNum == 4) {
@@ -123,6 +128,7 @@ public class UIKeyHandler extends KeyAdapter {
             glp.mu.purchaseState = false;
 
             if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
+                glp.sp.playSE(1,0);
                 if (glp.mu.commandNum == -2) {
                     glp.mu.commandNum = 0;
                 }
@@ -163,8 +169,10 @@ public class UIKeyHandler extends KeyAdapter {
                         UserDB.HP_potion++;
                         UserDB.coin = UserDB.coin - MainUI.hpcoin;
                         glp.mu.purchaseState = true;
+                        glp.sp.playSE(4,0);
                     } else {
                         glp.mu.coinLackState = true;
+                        glp.sp.playSE(5,0);
                     }
                 }
 
@@ -173,9 +181,11 @@ public class UIKeyHandler extends KeyAdapter {
                         UserDB.speed_potion++;
                         UserDB.coin = UserDB.coin - MainUI.spcoin;
                         glp.mu.purchaseState = true;
+                        glp.sp.playSE(4,0);
                     }
                     else {
                         glp.mu.coinLackState = true;
+                        glp.sp.playSE(5,0);
                     }
                 }
 
@@ -184,14 +194,17 @@ public class UIKeyHandler extends KeyAdapter {
                         UserDB.is_hard_ship = true;
                         UserDB.coin = UserDB.coin - MainUI.hscoin;
                         glp.mu.purchaseState = true;
+                        glp.sp.playSE(4,0);
                     }
 
                     else if (!UserDB.is_hard_ship) {
                         glp.mu.coinLackState = true;
+                        glp.sp.playSE(5,0);
                     }
 
                     else {
                         glp.mu.possState = true;
+                        glp.sp.playSE(5,0);
                     }
 
                 }
@@ -201,14 +214,17 @@ public class UIKeyHandler extends KeyAdapter {
                         UserDB.is_lucky_ship = true;
                         UserDB.coin = UserDB.coin - MainUI.lscoin;
                         glp.mu.purchaseState = true;
+                        glp.sp.playSE(4,0);
                     }
 
                     else if (!UserDB.is_lucky_ship) {
                         glp.mu.coinLackState = true;
+                        glp.sp.playSE(5,0);
                     }
 
                     else {
                         glp.mu.possState = true;
+                        glp.sp.playSE(5,0);
                     }
 
                 }
@@ -216,6 +232,7 @@ public class UIKeyHandler extends KeyAdapter {
                 if (glp.mu.commandNum == 4) {
                     glp.mu.commandNum = 1;
                     glp.gameState = glp.titleState;
+                    glp.sp.playSE(1,0);
                 }
             }
         }
@@ -224,6 +241,7 @@ public class UIKeyHandler extends KeyAdapter {
         if(glp.gameState == glp.userState){
             glp.mu.equipState = false;
             if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_LEFT || code == KeyEvent.VK_UP || code == KeyEvent.VK_DOWN) {
+                glp.sp.playSE(1,0);
                 if (glp.mu.commandNum == -2) {
                     glp.mu.commandNum = 0;
                 }
@@ -246,7 +264,7 @@ public class UIKeyHandler extends KeyAdapter {
                     if(!UserDB.is_hard_ship && UserDB.is_lucky_ship){
                         glp.mu.commandNum = 2;
                     }
-                    else {return;}
+                    else return;
                 }
             }
 
@@ -261,7 +279,7 @@ public class UIKeyHandler extends KeyAdapter {
                     if (!UserDB.is_hard_ship && UserDB.is_lucky_ship) {
                         glp.mu.commandNum = 0;
                     }
-                    else {return;}
+                    else return;
                 }
             }
 
@@ -280,26 +298,31 @@ public class UIKeyHandler extends KeyAdapter {
                 if (glp.mu.commandNum == 0) {
                     glp.mu.equipState = true;
                     UserDB.selected_ship = 0;
+                    glp.sp.playSE(3,0);
                 }
 
                 if (glp.mu.commandNum == 1) {
                     glp.mu.equipState = true;
                     UserDB.selected_ship = 1;
+                    glp.sp.playSE(3,0);
                 }
 
                 if (glp.mu.commandNum == 2) {
                     glp.mu.equipState = true;
                     UserDB.selected_ship = 2;
+                    glp.sp.playSE(3,0);
                 }
 
                 if (glp.mu.commandNum == 3) {
                     glp.mu.commandNum = 2;
                     glp.gameState = glp.titleState;
+                    glp.sp.playSE(1,0);
                 }
             }
         }
 
         if(glp.gameState == glp.initialState){
+            glp.sp.playSE(1,0);
             if (code == KeyEvent.VK_DOWN) {
                 glp.mu.commandNum++;
                 if (glp.mu.commandNum > 3) {
@@ -338,6 +361,7 @@ public class UIKeyHandler extends KeyAdapter {
         }
 
         if (glp.gameState == glp.signInState) {
+            glp.sp.playSE(1,0);
             glp.mu.unableLoginState = false;
             if (code == KeyEvent.VK_DOWN) {
                 glp.mu.commandNum++;
@@ -398,6 +422,7 @@ public class UIKeyHandler extends KeyAdapter {
             glp.mu.pwConfirmErrorState = false;
             glp.mu.registerSuccessState = false;
             glp.mu.inputExistState = false;
+            glp.sp.playSE(1,0);
 
             if (code == KeyEvent.VK_DOWN) {
                 glp.mu.commandNum++;
@@ -443,6 +468,7 @@ public class UIKeyHandler extends KeyAdapter {
         }
 
         if(glp.gameState == glp.tutorialState){
+            glp.sp.playSE(1,0);
             if (code == KeyEvent.VK_DOWN) {
                 glp.mu.commandNum++;
                 if (glp.mu.commandNum > 1) {
@@ -471,6 +497,7 @@ public class UIKeyHandler extends KeyAdapter {
         }
 
         if(glp.gameState == glp.changeNickState){
+            glp.sp.playSE(1,0);
             glp.mu.outOfLengthState = false;
             glp.mu.registerSuccessState = false;
             glp.mu.inputExistState = false;
@@ -504,6 +531,7 @@ public class UIKeyHandler extends KeyAdapter {
         }
 
         if(glp.mu.dialogState){
+            glp.sp.playSE(1,0);
             if (code == KeyEvent.VK_RIGHT) {
                 glp.mu.commandNum++;
                 if (glp.mu.commandNum > 1) {
@@ -650,11 +678,12 @@ public class UIKeyHandler extends KeyAdapter {
                     UserDB.HP_potion = rs2.getInt("HP_potion");
                     UserDB.speed_potion = rs2.getInt("speed_potion");
                     UserDB.selected_ship = rs2.getInt("selected_ship");
-                    UserDB.isFirstPlay = rs2.getBoolean("is_first_play");
+                    UserDB.is_first_play = rs2.getBoolean("is_first_play");
                     UserDB.loggedIn();
                 }
             } else {
                 glp.mu.unableLoginState = true;
+                glp.sp.playSE(5,0);
             }
             rs.close();
             pstmt.close();
@@ -671,14 +700,17 @@ public class UIKeyHandler extends KeyAdapter {
         //부적절한 입력정보 감지
         if (nicString.length() < 5 || nicString.length() > 10 || idString.length() < 8  || idString.length() > 12 || pwString.length() < 8 || pwString.length() > 12) {
             glp.mu.outOfLengthState = true;
+            glp.sp.playSE(5,0);
         }
 
         else if (idString.equals(pwString)) {
             glp.mu.idpwEqualState = true;
+            glp.sp.playSE(5,0);
         }
 
         else if (!pwString.equals(recPwString)) {
             glp.mu.pwConfirmErrorState = true;
+            glp.sp.playSE(5,0);
         }
 
         //데이터베이스 접속, 중복된 ID, 패스워드, 닉네임 있는지 확인
@@ -744,7 +776,7 @@ public class UIKeyHandler extends KeyAdapter {
             pstmt.setInt(6, UserDB.HP_potion);
             pstmt.setInt(7, UserDB.speed_potion);
             pstmt.setInt(8, UserDB.selected_ship);
-            pstmt.setBoolean(9, UserDB.isFirstPlay);
+            pstmt.setBoolean(9, UserDB.is_first_play);
             pstmt.setString(10, UserDB.userID);
 
             int updateResult = pstmt.executeUpdate();
@@ -758,8 +790,9 @@ public class UIKeyHandler extends KeyAdapter {
     }
 
     public void startGame(){
+        glp.sp.stopMusic(2);
         glp.gameState = glp.inGameState;
-        UserDB.isFirstPlay = false;
+        UserDB.is_first_play = false;
         glp.frameLocation = glp.getLocationOnScreen();
         Thread gameThread = new Thread(new Runnable() {
             public void run() {
@@ -777,6 +810,7 @@ public class UIKeyHandler extends KeyAdapter {
         
         if (nicString.length() > 12 || nicString.length() < 8) {
             glp.mu.outOfLengthState = true;
+            glp.sp.playSE(5,0);
             return;
         }
 
@@ -811,6 +845,7 @@ public class UIKeyHandler extends KeyAdapter {
             }
             else {
                 glp.mu.inputExistState = true;
+                glp.sp.playSE(5,0);
             }
         }
         catch (SQLException ex){

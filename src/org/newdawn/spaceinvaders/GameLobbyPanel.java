@@ -2,15 +2,6 @@ package org.newdawn.spaceinvaders;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import static javax.swing.JFrame.EXIT_ON_CLOSE;
 
 public class GameLobbyPanel extends JPanel implements Runnable {
 
@@ -32,6 +23,7 @@ public class GameLobbyPanel extends JPanel implements Runnable {
     Point frameLocation;
     public MainUI mu = new MainUI(this);
     public UIKeyHandler key = new UIKeyHandler(this);
+    public SoundPlayer sp = new SoundPlayer();
 
 
     public GameLobbyPanel(){
@@ -40,6 +32,7 @@ public class GameLobbyPanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(key);
         this.setFocusable(true);
+        sp.playMusic(2,-20.0f);
     }
 
     public void startGameThread(){
