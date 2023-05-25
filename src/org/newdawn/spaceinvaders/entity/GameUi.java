@@ -9,6 +9,8 @@ import org.newdawn.spaceinvaders.Game;
  */
 public class GameUi extends Entity {
 	private Game game;
+	private double time;
+
 	public GameUi(Game game, String ref, int x, int y) {
 		super(ref,x,y);
 		this.game = game;

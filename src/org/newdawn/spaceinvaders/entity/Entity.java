@@ -37,6 +37,7 @@ public abstract class Entity {
 	private int hp;
 	private boolean gotHit;
 
+	public boolean immortal;
 
 
 	/**
@@ -139,6 +140,8 @@ public abstract class Entity {
 
 	public boolean getHit(){return  gotHit;}
 	public void setHit(boolean hit){this.gotHit = hit;}
+
+	public void setImmortal(boolean imt){this.immortal = imt;}
 
 	/**
 	 * Check if this entity collised with another.

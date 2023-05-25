@@ -7,21 +7,16 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import java.io.*;
-import javax.sound.sampled.*;
+import java.util.concurrent.TimeUnit;
 
-import javafx.scene.control.TextFormatter;
 import org.newdawn.spaceinvaders.entity.*;
-import org.newdawn.spaceinvaders.entity.*;
-
 
 
 /**
@@ -44,9 +39,6 @@ public class Game extends Canvas
 	private long coolTime = 3000;
 	int timer;
 	int timeCheck;
-	int min=0;
-	int second=0;
-
 	int HPcooldownCheck;
 	int SPcooldownCheck;
 
@@ -73,14 +65,13 @@ public class Game extends Canvas
 	private Entity alien;
 	private Entity[] itemUi = new Entity[4];
 	private Entity stageUI ;
-	/**화면에 남은 보스 수 **/
-	private int bossCount;
 	private double moveSpeed = 300;
 	/** The time at which last fired a shot */
 	private long lastFire = 0;
 	private long lastUseSpeedPotion= 0;
 
 	private long lastUseHealPotion=0;
+	private long lastUsedShipImmortal = 0;
 	/** The interval between our players shot (ms) */
 	private long firingInterval = 200;
 	/** The number of aliens left on the screen */
@@ -110,12 +101,11 @@ public class Game extends Canvas
 	//private LoginFrame lf;
 	GameLobbyPanel glp;
 	public SoundPlayer sp = new SoundPlayer();
-
-
+	long startTime = System.currentTimeMillis();
 	private Boolean bossAlive = false;
-	public int stage=2;
+	public int stage=3;
 
-	private boolean isStageUi = false;
+	private boolean isStageUiOn = false;
 
 	private boolean usedHealPotion = false;
 	private boolean usedSpeedPotion = false;
@@ -202,28 +192,22 @@ public class Game extends Canvas
 		//sp.playMusic(0,0);
 
 	}
-
-
-
-	/**
-	 * Initialise the starting state of the entities (ship and aliens). Each
-	 * entitiy will be added to the overall list of entities in the game.
-	 */
 	private void initEntities() {
-		AddShip();
-		//AddAlien();
-		AddBoss(100);
-		AddBossHp(100);
-		AddPlayerHpUI(ship.getHp());
-		AddCoidUI();
-		Addicon();
-		AddRound();
-
+		addShip();
+//		AddAlien();
+		addPlayerHpimg(ship.getHp());
+		addPlayerCoinimg();
+		addPlayerPotionimg();
+		showStageimg();
+		addBoss(1);
 	}
 
-	public void AddRound(){
-		isStageUi = true;
+	public void showStageimg(){
+		isStageUiOn = true;
 		addRound = System.currentTimeMillis();
+		addStageimg();
+	}
+	private void addStageimg() {
 		switch (stage){
 			case 1:
 				stageUI = new GameUi(this,"sprites/window/game_window_round_1.png",0,0);
@@ -247,8 +231,9 @@ public class Game extends Canvas
 				break;
 		}
 	}
+
 	/**플레이어 생성**/
-	public void AddShip(){
+	public void addShip(){
 		if(UserDB.selected_ship==0){
 			ship = new ShipEntity(this,"sprites/ship.gif",370,550);
 		} else if (UserDB.selected_ship ==1) {
@@ -261,17 +246,15 @@ public class Game extends Canvas
 		}
 		entities.add(ship);
 	}
-
-	/**플레이어 HP IU**/
-	public void AddPlayerHpUI(int playerHp){
+	/**플레이어 HP 이미지**/
+	public void addPlayerHpimg(int playerHp){
 		for(int i=0; i<playerHp; i++){
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
 		}
 	}
-
 	/**아이콘 생성**/
-	public void Addicon(){
+	public void addPlayerPotionimg(){
 		itemUi[0] = new GameUi(this,"sprites/heal_potion.png",20,550);
 		entities.add(itemUi[0]);
 		itemUi[2] = new GameUi(this,"sprites/speed_potion.png",50,550);
@@ -279,8 +262,7 @@ public class Game extends Canvas
 	}
 
 	/**기본 적 생성 **/
-	public void AddAlien(){
-
+	public void addAlien(){
 		alienCount = 0;
 		for (int row=0;row<5;row++) {
 			for (int x=0;x<12;x++) {
@@ -292,8 +274,7 @@ public class Game extends Canvas
 	}
 
 	/**보스 생성**/
-	public  void AddBoss(int hp){
-		bossCount = 1;
+	public  void addBoss(int hp){
 		boss = new BossEntity(this,350,130);
 		entities.add(boss);
 		bossAlive = true;
@@ -301,8 +282,8 @@ public class Game extends Canvas
 		sp.playSE(6,0);
 	}
 
-	/**보스 HP UI**/
-	public void AddBossHp(int bossHp){
+	/**보스 HP바 img생성**/
+	public void addBossHpBar(int bossHp){
 		bossHpBar = new GameUi(this,"sprites/gage_bar.png",225,80);
 		entities.add(bossHpBar);
 		for(int i=0; i<bossHp; i++){
@@ -311,14 +292,14 @@ public class Game extends Canvas
 		}
 	}
 
-	/** 코인UI 생성 **/
-	public void AddCoidUI(){
+	/** 플레이어 보유 코인img 생성 **/
+	public void addPlayerCoinimg(){
 		coidUI = new GameUi(this,"sprites/coin.png",675,50);
 		entities.add(coidUI);
 	}
 
 	/** 코인 생성**/
-	public void SpawnCoin(int x,int y){
+	public void spawnCoin(int x, int y){
 		coinPrefab = new ItemUi(this,"sprites/coin.png",x,y);
 		entities.add(coinPrefab);
 	}
@@ -347,7 +328,6 @@ public class Game extends Canvas
         }
     }
 
-
     public void notifyWin() {
         message = "Well done! You Win!";
         waitingForKeyPress = true;
@@ -360,25 +340,24 @@ public class Game extends Canvas
         if (alienCount == 0) {
             switch (stage) {
                 case 1:
-
-					AddBoss(100);
-					AddBossHp(100);
+					addBoss(100);
+					addBossHpBar(100);
 					break;
 				case 2:
-					AddBoss(110);
-					AddBossHp(110);
+					addBoss(110);
+					addBossHpBar(110);
 					break;
 				case 3:
-					AddBoss(120);
-					AddBossHp(120);
+					addBoss(120);
+					addBossHpBar(120);
 					break;
 				case 4:
-					AddBoss(130);
-					AddBossHp(130);
+					addBoss(130);
+					addBossHpBar(130);
 					break;
 				case 5:
-					AddBoss(140);
-					AddBossHp(140);
+					addBoss(140);
+					addBossHpBar(140);
 					break;
 			}
 		}
@@ -395,16 +374,15 @@ public class Game extends Canvas
 	}
 	public void notifyBossKilled(){
 		bossAlive = false;
-		bossCount--;
 		for (Entity value : bossHpUi) {
 			removeEntity(value);
 		}
 		removeEntity(bossHpBar);
 		stage++;
 		score +=1000;
-		AddRound();
-		if(bossCount ==0){
-			AddAlien();
+		showStageimg();
+		if(bossAlive == false){
+			addAlien();
 		}
 		Entity entity = (Entity) entities.get(0);
 		if(entity instanceof BossEntity){
@@ -415,9 +393,7 @@ public class Game extends Canvas
 
 	public void tryToFire() {
 		// check that we have waiting long enough to fire
-		if (System.currentTimeMillis() - lastFire < firingInterval) {
-			return;
-		}
+		if (isBossAlive(System.currentTimeMillis() - lastFire < firingInterval)) return;
 
 		// if we waited long enough, create the shot entity, and record the time.
 		lastFire = System.currentTimeMillis();
@@ -427,18 +403,14 @@ public class Game extends Canvas
 	}
 
 	/** 단게별 보스 패턴 **/
-	public void BossGodMode(int time){ /**1단계 보스 패턴**/
-		if(!bossAlive){
-			return;
-		}
+	public void bossGodMode(int time){ /**1단계 보스 패턴**/
+		if (isBossAlive(!bossAlive)) return;
 		if((stage==1)||(stage==5)||(stage ==3)){
 			boss.ImmortallityCheck(time);
 		}
 	}
-	public void BossFire(){ /**2단계 보스 패턴**/
-		if(!bossAlive){
-			return;
-		}
+	public void bossFire(){ /**2단계 보스 패턴**/
+		if (isBossAlive(!bossAlive)) return;
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
 			BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
@@ -447,71 +419,76 @@ public class Game extends Canvas
 		}
 	}
 
-	public void BossUlti(int timer){/**보스 미사일 패턴**/
-		if(!bossAlive){
-			return;
-		}
+	public void bossUltiCos(int timer){/**보스 미사일 패턴**/
+		if (isBossAlive(!bossAlive)) return;
 		double cos = Math.toRadians(timer);
 		double coss = Math.cos(cos);
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if ((timer>100&&timer<300)&&(timer%15==0)){
+			shotCos(timer, coss);
+		}
+
+	}
+
+	public void bossUltiLayer(int timer){
+		if (isBossAlive(!bossAlive)) return;
+		if((stage ==2)||(stage ==4) ||(stage==5) ){
+			shotLayer(timer);
+		}
+	}
+	private void shotCos(int timer, double coss) {
+		if ((timer >100&& timer <300)&&(timer %15==0)){
+			BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
+			entities.add(shot);
+			shot.shotXMove(coss *300,200);
+			BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
+			entities.add(shot2);
+			shot2.shotXMove(coss *300*-1,200);
+			sp.playSE(7,0);
+		}
+	}
+
+	private void shotLayer(int timer) {
+		if(timer %111 ==0){
+			for(int i=-5; i<=5; i++){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
-				shot.shotXMove(coss*300,200);
-				BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
-				entities.add(shot2);
-				shot2.shotXMove(coss*300*-1,200);
-				sp.playSE(7,0);
+				shot.shotXMove(35*i,100);
 			}
 		}
 	}
 
-	public void BossUlti1(int timer){
-		if(!bossAlive){
-			return;
-		}
-		if((stage ==2)||(stage ==4) ||(stage==5) ){
-			if(timer %111 ==0){
-				for(int i=-5; i<=5; i++){
-					BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
-					entities.add(shot);
-					shot.shotXMove(35*i,100);
-				}
-			}
-		}
-	}
-	public void AddObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
+	public void addObstacle(){ /**3단계 보스 패턴**//**장애물 생성**/
 		int randomObstacle = (int) (Math.random() * 5); // 0~4까지의 랜덤한 정수
-		if(!bossAlive){
-			return;}
+		if (isBossAlive(!bossAlive)) return;
 		if((stage ==3)||(stage==5)){
 			sp.playSE(15,0);
-			if (randomObstacle == 0) {
-				obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_blue_moon.png",(int)(Math.random()*750),10);
-			}
-			else if (randomObstacle == 1) {
-				obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_moon.png",(int)(Math.random()*750),10);
-			}
-			else if (randomObstacle == 2) {
-				obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_purple_moon.png",(int)(Math.random()*750),10);
-			}
-			else if (randomObstacle == 3) {
-				obstacle = new ObstacleEntity(this,"sprites/obstacle_saturn.png",(int)(Math.random()*750),10);
-			}
-			else if (randomObstacle == 4) {
-				obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
-			}
-			else {
-				obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
-			}
-
+			loadobstacles(randomObstacle);
 			entities.add(obstacle);
 		}
 	}
-	public void BossReflectMode(int time){ /**4단계 보스 패턴**//**보스 데미지 반사**/
-		if(!bossAlive){
-			return;
+	private void loadobstacles(int randomObstacle) {
+		if (randomObstacle == 0) {
+			obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_blue_moon.png",(int)(Math.random()*750),10);
 		}
+		else if (randomObstacle == 1) {
+			obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_moon.png",(int)(Math.random()*750),10);
+		}
+		else if (randomObstacle == 2) {
+			obstacle = new ObstacleEntity(this,"sprites/mini_obstacle_purple_moon.png",(int)(Math.random()*750),10);
+		}
+		else if (randomObstacle == 3) {
+			obstacle = new ObstacleEntity(this,"sprites/obstacle_saturn.png",(int)(Math.random()*750),10);
+		}
+		else if (randomObstacle == 4) {
+			obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
+		}
+		else {
+			obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
+		}
+	}
+
+	public void bossReflectMode(int time){ /**4단계 보스 패턴**//**보스 데미지 반사**/
+		if (isBossAlive(!bossAlive)) return;
 		if ((stage == 4)||(stage ==5)) {
 			boss.ReflectCheck(time);
 		}
@@ -521,6 +498,12 @@ public class Game extends Canvas
 			ship.setHp(-1);
 			reflectDamaged = true;
 		}
+	}
+	private boolean isBossAlive(boolean bossAlive) {
+		if(bossAlive){
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -544,6 +527,11 @@ public class Game extends Canvas
 				// move this loop
 				long delta = SystemTimer.getTime() - lastLoopTime;
 				lastLoopTime = SystemTimer.getTime();
+
+				//
+				long elapsedTime = System.currentTimeMillis() - startTime;
+				long seconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime) %60;
+				long minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime)%60;
 
 				// update the frame counter
 				lastFpsTime += delta;
@@ -643,15 +631,13 @@ public class Game extends Canvas
 				ggi.drawString(String.valueOf(UserDB.HP_potion),33,580);
 				ggi.drawString(String.valueOf(UserDB.speed_potion),66,580);
 
-
-				Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
-
-				/** 시간**/
-				GetTime();
 				gi.setColor(Color.white);
 				gi.setFont(glp.mu.NeoDung);
+
+				/** 시간**/
+
 				gi.setFont(gi.getFont().deriveFont(Font.PLAIN,25f));
-				gi.drawString(String.valueOf(min)+":"+String.valueOf(second),377,35);
+				gi.drawString(String.valueOf(minutes)+":"+String.valueOf(seconds),377,35);
 
 				/** 스코어 **/
 				gi.drawString("Score "+score,29,35);
@@ -686,8 +672,8 @@ public class Game extends Canvas
 					tryToFire();
 				}
 				if(timer%100== 0){
-					AddObstacle();
-					BossFire();
+					addObstacle();
+					bossFire();
 				}
 				//게임 일시 정지 & 로비로 나가기
 				if(escPressed){
@@ -699,27 +685,30 @@ public class Game extends Canvas
 					notifyDeath();
 				}
 
-				BossGodMode(timer); /**보스 무적**/
+				bossGodMode(timer); /**보스 무적**/
 				reflectTime();
-				BossReflectMode(timer); /**보스 데미지 반사**/
-				BossHpDeal();/**보스 hp ui**/
+				bossReflectMode(timer); /**보스 데미지 반사**/
+				removeBossHp();/**보스 hp ui**/
 				shipGotHit();/** 플레이어 피격**/
 				//BossUlti(timer);/**보스 공격패턴1**/
-				BossUlti1(timer);/**보스 공격패턴2**/
+				bossUltiLayer(timer);/**보스 공격패턴2**/
 
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 
 				if ((System.currentTimeMillis() - lastUseHealPotion) > coolTime){
-					ChangeHealPotionIcon();
+					changeHealPotionIcon();
 				}
 				if ((System.currentTimeMillis() - lastUseSpeedPotion) > coolTime){
-					ChangeSpeedPotionIcon();
+					changeSpeedPotionIcon();
 				}
 				if ((System.currentTimeMillis() - lastUseSpeedPotion) > 2000){
-					ReturnMoveSpeed();
+					returnMoveSpeed();
 				}
 				if ((System.currentTimeMillis() - addRound) > 1000){
-					RemoveRoundUi();
+					removeRoundUi();
+				}
+				if((System.currentTimeMillis() - lastUsedShipImmortal) > coolTime){
+					ship.setImmortal(false);
 				}
 			}
 		}
@@ -732,28 +721,22 @@ public class Game extends Canvas
 		else{ship.setHit(false);}
 	}
 
-	public void RemoveRoundUi(){
-		if(isStageUi ==false){
-			return;
-		}
+	public void removeRoundUi(){
+		if (isBossAlive(isStageUiOn == false)) return;
 		for(int i=0; i<5; i++){
 			removeEntity(stageUI);
 		}
 	}
 
-	public  void UseHealPotion(int i){
+	public  void useHealPotion(int i){
 		if(UserDB.selected_ship == 0 || UserDB.selected_ship == 2) {
 			if (i >= 5) return;
 		}
 		if(UserDB.selected_ship == 1) {
 			if (i >= 7) return;
 		}
-		if(UserDB.HP_potion<1){
-			return;
-		}
-		if ((System.currentTimeMillis() - lastUseHealPotion) < coolTime) {
-			return;
-		}
+		if (isBossAlive(UserDB.HP_potion < 1)) return;
+		if (isBossAlive((System.currentTimeMillis() - lastUseHealPotion) < coolTime)) return;
 		lastUseHealPotion = System.currentTimeMillis();
 			UserDB.HP_potion--;
 			ship.setHp(1);
@@ -765,7 +748,7 @@ public class Game extends Canvas
 			usedHealPotion = true;
 			sp.playSE(17,0);
 	}
-	public void ChangeHealPotionIcon(){
+	public void changeHealPotionIcon(){
 		if (usedHealPotion) {
 			removeEntity(itemUi[1]);
 			entities.add(itemUi[0]);
@@ -773,7 +756,7 @@ public class Game extends Canvas
 		usedHealPotion = false;
 	}
 
-	public void ChangeSpeedPotionIcon(){
+	public void changeSpeedPotionIcon(){
 		if (usedSpeedPotion) {
 			removeEntity(itemUi[3]);
 			entities.add(itemUi[2]);
@@ -781,13 +764,9 @@ public class Game extends Canvas
 		usedSpeedPotion = false;
 	}
 
-	public void UseSpeedPotion(){
-		if(UserDB.speed_potion<1){
-			return;
-		}
-		if ((System.currentTimeMillis() - lastUseSpeedPotion) < coolTime) {
-			return;
-		}
+	public void useSpeedPotion(){
+		if (isBossAlive(UserDB.speed_potion < 1)) return;
+		if (isBossAlive((System.currentTimeMillis() - lastUseSpeedPotion) < coolTime)) return;
 		lastUseSpeedPotion = System.currentTimeMillis();
 		moveSpeed = 500;
 		UserDB.speed_potion--;
@@ -797,13 +776,13 @@ public class Game extends Canvas
 		usedSpeedPotion = true;
 		sp.playSE(18,0);
 	}
-	public void ReturnMoveSpeed(){
+	public void returnMoveSpeed(){
 			moveSpeed = 300;
 	}
 
 
-	public void BossHpDeal(){/**보스 hp ui 동작 **/
-		if(!bossAlive){return;}
+	public void removeBossHp(){/**보스 hp ui 동작 **/
+		if (isBossAlive(!bossAlive)) return;
 		if(boss.getHit()){
 			int num = boss.getHp();
 			removeEntity(bossHpUi[num]);
@@ -829,19 +808,6 @@ public class Game extends Canvas
 			gameRunning = true;
 		}
 	}
-
-	private void GetTime(){
-		timeCheck++;
-		if (timeCheck>100){
-			second++;
-			timeCheck =0;
-		}
-		if(second >60){
-			min++;
-			second=0;
-		}
-	}
-
 	public void reflectTime( ){
 		if (reflectDamaged) {
 			reflectCooldown -= 0.01;
@@ -851,8 +817,6 @@ public class Game extends Canvas
 			}
 		}
 	}
-
-
 	public void showHPCooldown( ){
 		if (usedHealPotion) {
 			HPcooldownCheck++;
@@ -923,9 +887,7 @@ public class Game extends Canvas
 		public void keyPressed(KeyEvent e) {
 			// if we're waiting for an "any key" typed then we don't
 			// want to do anything with just a "press"
-			if (waitingForKeyPress) {
-				return;
-			}
+			if (isBossAlive(waitingForKeyPress)) return;
 
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				leftPressed = true;
@@ -937,13 +899,17 @@ public class Game extends Canvas
 				firePressed = true;
 			}
 			if (e.getKeyChar() == 'x'){
-				UseSpeedPotion();
+				useSpeedPotion();
 			}
 			if (e.getKeyChar() == 'z'){
-				UseHealPotion(ship.getHp());
+				useHealPotion(ship.getHp());
 			}
 			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				escPressed = true;
+			}
+			if (e.getKeyChar() == 'c'){
+				ship.setImmortal(true);
+				lastUsedShipImmortal = System.currentTimeMillis();
 			}
 		}
 
@@ -955,9 +921,7 @@ public class Game extends Canvas
 		public void keyReleased(KeyEvent e) {
 			// if we're waiting for an "any key" typed then we don't
 			// want to do anything with just a "released"
-			if (waitingForKeyPress) {
-				return;
-			}
+			if (isBossAlive(waitingForKeyPress)) return;
 
 			if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 				leftPressed = false;
@@ -1004,11 +968,6 @@ public class Game extends Canvas
 			}
 		}
 	}
-
-
-
-
-
 	/**
 	 * The entry point into the game. We'll simply create an
 	 * instance of class which will start the display and game

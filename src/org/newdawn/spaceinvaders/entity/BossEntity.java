@@ -3,8 +3,6 @@ package org.newdawn.spaceinvaders.entity;
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.Sprite;
 import org.newdawn.spaceinvaders.SpriteStore;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * The entity that represents the players ship
