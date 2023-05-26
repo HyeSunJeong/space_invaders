@@ -13,9 +13,6 @@ public class ShipEntity extends Entity {
 	private Game game;
 	private int hp=5;
 	private boolean gotHit;
-
-	
-
 	public ShipEntity(Game game,String ref,int x,int y) {
 		super(ref,x,y);
 		

@@ -199,7 +199,7 @@ public class Game extends Canvas
 		addPlayerCoinimg();
 		addPlayerPotionimg();
 		showStageimg();
-		addBoss(1);
+		addBoss(100);
 	}
 
 	public void showStageimg(){
@@ -389,8 +389,6 @@ public class Game extends Canvas
 			entity.setHorizontalMovement(entity.getHorizontalMovement()*1.02);
 		}
 	}
-
-
 	public void tryToFire() {
 		// check that we have waiting long enough to fire
 		if (isBossAlive(System.currentTimeMillis() - lastFire < firingInterval)) return;
@@ -401,14 +399,7 @@ public class Game extends Canvas
 		entities.add(shot);
 		sp.playSE(16,-10);
 	}
-
 	/** 단게별 보스 패턴 **/
-	public void bossGodMode(int time){ /**1단계 보스 패턴**/
-		if (isBossAlive(!bossAlive)) return;
-		if((stage==1)||(stage==5)||(stage ==3)){
-			boss.ImmortallityCheck(time);
-		}
-	}
 	public void bossFire(){ /**2단계 보스 패턴**/
 		if (isBossAlive(!bossAlive)) return;
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
@@ -645,6 +636,8 @@ public class Game extends Canvas
 				/**코인 **/
 				gi.drawString(String.valueOf(UserDB.coin),710,70);
 
+				gi.drawString(String.valueOf(boss.getImmortal()),710,70);
+
 				//아이템 쿨타임 표시
 				showHPCooldown();
 				if(usedHealPotion) gi.drawString(String.valueOf(HPCooldown),30,573);
@@ -685,7 +678,7 @@ public class Game extends Canvas
 					notifyDeath();
 				}
 
-				bossGodMode(timer); /**보스 무적**/
+				boss.doImmortal(seconds);
 				reflectTime();
 				bossReflectMode(timer); /**보스 데미지 반사**/
 				removeBossHp();/**보스 hp ui**/
