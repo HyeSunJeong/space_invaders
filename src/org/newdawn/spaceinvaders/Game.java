@@ -7,7 +7,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -16,12 +15,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.io.*;
-import javax.sound.sampled.*;
 
-import javafx.scene.control.TextFormatter;
 import org.newdawn.spaceinvaders.entity.*;
-import org.newdawn.spaceinvaders.entity.*;
-
+import org.newdawn.spaceinvaders.resource.SoundPlayer;
 
 
 /**

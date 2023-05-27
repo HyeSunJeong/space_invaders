@@ -1,4 +1,4 @@
-package org.newdawn.spaceinvaders;
+package org.newdawn.spaceinvaders.resource;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -8,9 +8,8 @@ import java.net.URL;
 
 public class SoundPlayer {
 
-    Clip clip;
-    URL soundURL[] = new URL[30];
-    private boolean isPlaying = false;
+    private Clip clip;
+    private URL[] soundURL = new URL[30];
 
     public SoundPlayer(){
         soundURL[0] = getClass().getResource("/sound/game_back_music.wav");
@@ -45,15 +44,15 @@ public class SoundPlayer {
         }
     }
 
-    public void play(){
+    private void play(){
         clip.start();
     }
 
-    public void loop(){
+    private void loop(){
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
 
-    public void stop(){
+    private void stop(){
         clip.stop();
         clip.close();
     }

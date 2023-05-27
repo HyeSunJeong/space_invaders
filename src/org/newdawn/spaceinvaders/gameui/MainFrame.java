@@ -1,4 +1,6 @@
-package org.newdawn.spaceinvaders;
+package org.newdawn.spaceinvaders.gameui;
+
+import org.newdawn.spaceinvaders.GameLobbyPanel;
 
 import javax.swing.*;
 
