@@ -477,18 +477,8 @@ public class Game extends Canvas
 			obstacle = new ObstacleEntity(this,"sprites/obstacle_sun.png",(int)(Math.random()*750),10);
 		}
 	}
-
-	public void bossReflectMode(int time){ /**4단계 보스 패턴**//**보스 데미지 반사**/
-		if (isBossAlive(!bossAlive)) return;
-		if ((stage == 4)||(stage ==5)) {
-			boss.ReflectCheck(time);
-		}
-	}
 	public void bossReflectStart(){ /**반사시 캐릭터 체력 감소**/
-		if (!reflectDamaged) {
-			ship.setHp(-1);
-			reflectDamaged = true;
-		}
+		ship.setHp(-1);
 	}
 	private boolean isBossAlive(boolean bossAlive) {
 		if(bossAlive){
@@ -637,6 +627,7 @@ public class Game extends Canvas
 				gi.drawString(String.valueOf(UserDB.coin),710,70);
 
 				gi.drawString(String.valueOf(boss.getImmortal()),710,70);
+				gi.drawString(String.valueOf(boss.getReflect()),710,250);
 
 				//아이템 쿨타임 표시
 				showHPCooldown();
@@ -677,14 +668,14 @@ public class Game extends Canvas
 				if(ship.getHp()<=0 && !waitingForKeyPress){
 					notifyDeath();
 				}
-
-				boss.doImmortal(seconds);
-				reflectTime();
-				bossReflectMode(timer); /**보스 데미지 반사**/
+				bossPattern(seconds);
+				/**보스 무적**/
+				//bossReflectMode(timer); /**보스 데미지 반사**/
 				removeBossHp();/**보스 hp ui**/
 				shipGotHit();/** 플레이어 피격**/
-				//BossUlti(timer);/**보스 공격패턴1**/
-				bossUltiLayer(timer);/**보스 공격패턴2**/
+
+				reflectTime();
+
 
 				SystemTimer.sleep(lastLoopTime+10-SystemTimer.getTime());
 
@@ -706,7 +697,29 @@ public class Game extends Canvas
 			}
 		}
 	}
-
+	private void bossPattern(long seconds) {
+		if (isBossAlive(!bossAlive)) return;
+		switch (stage){
+			case 1:
+				boss.doImmortal(seconds);
+				break;
+			case 2:
+				//BossUlti(timer);/**보스 공격패턴1**/
+				bossUltiLayer(timer);/**보스 공격패턴2**/
+				break;
+			case 3:
+				boss.doReflect(seconds);
+				break;
+			case 4:
+				boss.doReflect(seconds);
+				reflectTime();
+				break;
+			case 5:
+				boss.doReflect(seconds);
+				reflectTime();
+				break;
+		}
+	}
 	public void shipGotHit(){
 		if(ship.getHit()){
 			removeEntity(playerHpUI[ship.getHp()]);
