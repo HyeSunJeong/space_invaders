@@ -35,8 +35,9 @@ public class BossEntity extends Entity {
 
     private int frameNumber;
     long startImmortalTime;
+    long startReflectTime;
 
-    public Boolean reflect =false;
+    public boolean reflect =false;
     public BossEntity(Game game,int x,int y) {
         super("sprites/round1_alien.png",x,y);
         if(game.stage ==1){
@@ -156,7 +157,16 @@ public class BossEntity extends Entity {
             immortal = false;
         }
     }
-
+    public void doReflect(long second){
+        int reflectTime = 2;
+        if(second %2 ==0 && reflect == false && second !=0){
+            reflect = true;
+            startReflectTime = second;
+        }
+        if(second - startReflectTime > reflectTime){
+            reflect = false;
+        }
+    }
     public void ReflectCheck(int timer){
         if(timer %800 ==0){
             reflect = true;
@@ -175,6 +185,8 @@ public class BossEntity extends Entity {
     public void setHit(boolean hit){this.gotHit = hit;}
 
     public boolean getImmortal(){return immortal;}
+    public boolean getReflect(){return  reflect;}
+
 
     /**
      * Notification that the player's ship has collided with something
@@ -183,7 +195,7 @@ public class BossEntity extends Entity {
      */
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
-            if(!immortal){
+            if(!immortal || !reflect){
                 hp--;
                 game.sp.playSE(10,5);
                 gotHit = true;
@@ -193,6 +205,7 @@ public class BossEntity extends Entity {
                 }
             }
             else if(reflect){
+                System.out.println("dd");
                 game.bossReflectStart();
             }
         }

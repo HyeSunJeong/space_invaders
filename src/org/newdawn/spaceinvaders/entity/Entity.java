@@ -38,6 +38,7 @@ public abstract class Entity {
 	private boolean gotHit;
 
 	public boolean immortal;
+	public boolean reflect;
 
 
 	/**
@@ -141,7 +142,9 @@ public abstract class Entity {
 	public void setHit(boolean hit){this.gotHit = hit;}
 	public void doImmortal(long second){
 	}
+	public void doReflect(long second){}
 	public boolean getImmortal(){return immortal;}
+	public boolean getReflect(){return reflect;}
 	public void setImmortal(boolean imt){this.immortal = imt;}
 
 	/**
