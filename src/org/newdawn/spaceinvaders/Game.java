@@ -608,8 +608,7 @@ public class Game extends Canvas
 				/**물약 남은 수**/
 				ggi.setColor(Color.white);
 				Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
-				ggi.setFont(font1);
-				ggi.drawString(String.valueOf(UserDB.HP_potion),33,580);
+				printInformation(ggi, font1, String.valueOf(UserDB.HP_potion), 33, 580);
 				ggi.drawString(String.valueOf(UserDB.speed_potion),66,580);
 
 				gi.setColor(Color.white);
@@ -617,17 +616,9 @@ public class Game extends Canvas
 
 				/** 시간**/
 
-				gi.setFont(gi.getFont().deriveFont(Font.PLAIN,25f));
-				gi.drawString(String.valueOf(minutes)+":"+String.valueOf(seconds),377,35);
-
-				/** 스코어 **/
-				gi.drawString("Score "+score,29,35);
-
-				/**코인 **/
-				gi.drawString(String.valueOf(UserDB.coin),710,70);
-
-				gi.drawString(String.valueOf(boss.getImmortal()),710,70);
-				gi.drawString(String.valueOf(boss.getReflect()),710,250);
+				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(minutes) + ":" + String.valueOf(seconds), 377, 35);
+				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), "Score "+score, 29,35);
+				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(UserDB.coin), 710,70);
 
 				//아이템 쿨타임 표시
 				showHPCooldown();
@@ -697,6 +688,12 @@ public class Game extends Canvas
 			}
 		}
 	}
+
+	private void printInformation(Graphics2D gi, Font gi1, String minutes, int x, int y) {
+		gi.setFont(gi1);
+		gi.drawString(minutes, x, y);
+	}
+
 	private void bossPattern(long seconds) {
 		if (isBossAlive(!bossAlive)) return;
 		switch (stage){
