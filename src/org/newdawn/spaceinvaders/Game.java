@@ -104,9 +104,8 @@ public class Game extends Canvas
 	/** The game window that we'll update with the frame count */
 	private JFrame container;
 	//private LoginFrame lf;
-	GameLobbyPanel glp;
+	public GameLobbyPanel glp;
 	public SoundPlayer sp = new SoundPlayer();
-
 
 	private Boolean bossAlive = false;
 	public int stage=2;
@@ -245,9 +244,9 @@ public class Game extends Canvas
 	}
 	/**플레이어 생성**/
 	public void AddShip(){
-		if(UserDB.selected_ship==0){
+		if(glp.us.getSelectedShip()==0){
 			ship = new ShipEntity(this,"sprites/ship.gif",370,550);
-		} else if (UserDB.selected_ship ==1) {
+		} else if (glp.us.getSelectedShip() ==1) {
 			ship = new ShipEntity(this,"sprites/mini_hard_ship.png",370,550);
 			ship.setHp(2);
 		}
@@ -346,8 +345,8 @@ public class Game extends Canvas
 		stage = 1;
 		//게임오버 시 다시 할지 나갈지 결정(임시)
 		pauseGame("You Died! Wanna Quit?","",true);
-		if(UserDB.best_score < score){
-			UserDB.best_score = score;
+		if(glp.us.getHighScore() < score){
+			glp.us.setHighScore(score);
 		}
 	}
 
@@ -453,7 +452,7 @@ public class Game extends Canvas
 			BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 			entities.add(shot);
 			shot.shotXMove(ship.getX() - shot.getX(),300);
-			sp.playSE(19,-10);
+			sp.playSE(19,-20);
 		}
 	}
 
@@ -471,7 +470,7 @@ public class Game extends Canvas
 				BossShotEntity shot2 = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot2);
 				shot2.shotXMove(coss*300*-1,200);
-				sp.playSE(7,0);
+				sp.playSE(7,-10);
 			}
 		}
 	}
@@ -650,8 +649,8 @@ public class Game extends Canvas
 				ggi.setColor(Color.white);
 				Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
 				ggi.setFont(font1);
-				ggi.drawString(String.valueOf(UserDB.HP_potion),33,580);
-				ggi.drawString(String.valueOf(UserDB.speed_potion),66,580);
+				ggi.drawString(String.valueOf(glp.us.getHealPotion()),33,580);
+				ggi.drawString(String.valueOf(glp.us.getSpeedPotion()),66,580);
 
 
 				Font font = new Font("HY얕은샘물M",Font.PLAIN,25);
@@ -667,7 +666,7 @@ public class Game extends Canvas
 				gi.drawString("Score "+score,29,35);
 
 				/**코인 **/
-				gi.drawString(String.valueOf(UserDB.coin),710,70);
+				gi.drawString(String.valueOf(glp.us.getCoin()),710,70);
 
 				//아이템 쿨타임 표시
 				showHPCooldown();
@@ -752,20 +751,20 @@ public class Game extends Canvas
 	}
 
 	public  void UseHealPotion(int i){
-		if(UserDB.selected_ship == 0 || UserDB.selected_ship == 2) {
+		if(glp.us.getSelectedShip() == 0 || glp.us.getSelectedShip() == 2) {
 			if (i >= 5) return;
 		}
-		if(UserDB.selected_ship == 1) {
+		if(glp.us.getSelectedShip() == 1) {
 			if (i >= 7) return;
 		}
-		if(UserDB.HP_potion<1){
+		if(glp.us.getHealPotion()<1){
 			return;
 		}
 		if ((System.currentTimeMillis() - lastUseHealPotion) < coolTime) {
 			return;
 		}
 		lastUseHealPotion = System.currentTimeMillis();
-			UserDB.HP_potion--;
+			glp.us.incHealPotion(-1);
 			ship.setHp(1);
 			playerHpUI[i] = new GameUi(this,"sprites/heart.png",750-(35*i),15);
 			entities.add(playerHpUI[i]);
@@ -792,7 +791,7 @@ public class Game extends Canvas
 	}
 
 	public void UseSpeedPotion(){
-		if(UserDB.speed_potion<1){
+		if(glp.us.getSpeedPotion()<1){
 			return;
 		}
 		if ((System.currentTimeMillis() - lastUseSpeedPotion) < coolTime) {
@@ -800,7 +799,7 @@ public class Game extends Canvas
 		}
 		lastUseSpeedPotion = System.currentTimeMillis();
 		moveSpeed = 500;
-		UserDB.speed_potion--;
+		glp.us.incSpeedPotion(-1);
 		removeEntity(itemUi[2]);
 		itemUi[3] = new GameUi(this,"sprites/used_speed_potion.png",50,550);
 		entities.add(itemUi[3]);

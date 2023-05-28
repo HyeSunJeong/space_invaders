@@ -65,7 +65,7 @@ public class ItemUi extends Entity {
         if (other instanceof ShipEntity) {
                 switch (item){
                     case coin:
-                        UserDB.coin++;
+                        game.glp.us.incCoin(1);
                         game.sp.playSE(12,5);
                         break;
                     case other:

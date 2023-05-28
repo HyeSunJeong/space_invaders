@@ -8,28 +8,26 @@ public final class UserDB {
     public static Connection conn;
 
     //DB 저장용 데이터 변수
-    public static String userID;
-    public static String nickname = "guest"; //임시 초기닉네임
+    private String userID;
+    private String nickname = "guest"; //임시 초기닉네임
     //각 스테이지 당 최고 스코어 기록
-    public static int best_score = 0;
+    private int highScore = 0;
     //상점관련, 보유 코인 수
-    public static int coin = 0;
+    private int coin = 0;
     //우주선 보유 여부
-    public static boolean is_hard_ship = false;
-    public static boolean is_lucky_ship = false;
+    private boolean hardShip = false;
+    private boolean luckyShip = false;
     //포션 보유 개수
-    public static int HP_potion = 0;
-    public static int speed_potion = 0;
-
+    private int healPotion = 0;
+    private int speedPotion = 0;
     //현재 장착한 우주선
-    public static int selected_ship = 0;
-
+    private int selectedShip = 0;
     //튜토리얼 화면 띄울지 여부
-    public static boolean is_first_play = true;
+    private boolean firstPlay = true;
     //DB 저장용은 아님
-    public static boolean is_logged_in = false;
+    private boolean loggedIn = false;
 
-    GameLobbyPanel glp;
+    private GameLobbyPanel glp;
 
     //DB 연결
     static {
@@ -48,18 +46,117 @@ public final class UserDB {
     public static Connection getConnection() {
         return conn;
     }
-    public static void loggedIn(){is_logged_in = true;}
-    public static void loggedOut(){is_logged_in = false;}
-    public static void initializeDB(){
-        userID = null;
-        nickname = "guest"; //임시 초기닉네임
-        best_score = 0;
-        coin = 0;
-        is_hard_ship = false;
-        is_lucky_ship = false;
-        HP_potion = 0;
-        speed_potion = 0;
-        selected_ship = 0;
+
+    public void initializeDB(){
+        setUserID(null);
+        setNickname("guest"); //임시 초기닉네임
+        setHighScore(0);
+        setCoin(0);
+        setHardShip(false);
+        setLuckyShip(false);
+        setHealPotion(0);
+        setSpeedPotion(0);
+        setSelectedShip(0);
+    }
+
+    public String getUserID() {
+        return userID;
+    }
+
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public int getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(int highScore) {
+        this.highScore = highScore;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
+    }
+
+    public void incCoin(int coin){
+        this.coin += coin;
+    }
+
+    public boolean isHardShip() {
+        return hardShip;
+    }
+
+    public void setHardShip(boolean hardShip) {
+        this.hardShip = hardShip;
+    }
+
+    public boolean isLuckyShip() {
+        return luckyShip;
+    }
+
+    public void setLuckyShip(boolean is_lucky_ship) {
+        this.luckyShip = is_lucky_ship;
+    }
+
+    public int getHealPotion() {
+        return healPotion;
+    }
+
+    public void setHealPotion(int healPotion) {
+        this.healPotion = healPotion;
+    }
+
+    public void incHealPotion(int healPotion) {
+        this.healPotion += healPotion;
+    }
+
+    public int getSpeedPotion() {
+        return speedPotion;
+    }
+
+    public void setSpeedPotion(int speedPotion) {
+        this.speedPotion = speedPotion;
+    }
+
+    public void incSpeedPotion(int speedPotion) {
+        this.speedPotion += speedPotion;
+    }
+
+    public int getSelectedShip() {
+        return selectedShip;
+    }
+
+    public void setSelectedShip(int selectedShip) {
+        this.selectedShip = selectedShip;
+    }
+
+    public boolean isFirstPlay() {
+        return firstPlay;
+    }
+
+    public void setFirstPlay(boolean firstPlay) {
+        this.firstPlay = firstPlay;
+    }
+
+    public boolean isLoggedIn() {
+        return loggedIn;
+    }
+
+    public void setLoggedIn(boolean loggedIn) {
+        this.loggedIn = loggedIn;
     }
 
     //로그인
@@ -84,17 +181,17 @@ public final class UserDB {
                 ResultSet rs2 = pstmt2.executeQuery();
                 //플레이어 데이터 로드 - 데이터베이스 테이블에서 데이터 로드, UserDB의 static 변수에 저장
                 while (rs2.next()) {
-                    userID = glp.key.idString;
-                    nickname = rs2.getString("nickname");
-                    best_score = rs2.getInt("best_score");
-                    coin = rs2.getInt("coin");
-                    is_hard_ship = rs2.getBoolean("is_hard_ship");
-                    is_lucky_ship = rs2.getBoolean("is_lucky_ship");
-                    HP_potion = rs2.getInt("HP_potion");
-                    speed_potion = rs2.getInt("speed_potion");
-                    selected_ship = rs2.getInt("selected_ship");
-                    is_first_play = rs2.getBoolean("is_first_play");
-                    loggedIn();
+                    setUserID(glp.key.idString);
+                    setNickname(rs2.getString("nickname"));
+                    setHighScore(rs2.getInt("best_score"));
+                    setCoin(rs2.getInt("coin"));
+                    setHardShip(rs2.getBoolean("is_hard_ship"));
+                    setLuckyShip(rs2.getBoolean("is_lucky_ship"));
+                    setHealPotion(rs2.getInt("HP_potion"));
+                    setSpeedPotion(rs2.getInt("speed_potion"));
+                    setSelectedShip(rs2.getInt("selected_ship"));
+                    setFirstPlay(rs2.getBoolean("is_first_play"));
+                    setLoggedIn(true);
                 }
             } else {
                 glp.mu.unableLoginState = true;
@@ -185,16 +282,16 @@ public final class UserDB {
             String dataSave = "UPDATE userdata SET nickname = ?, best_score = ?, coin = ?, is_hard_ship = ?,is_lucky_ship = ?, HP_potion = ?, speed_potion = ? , selected_ship = ?, is_first_play = ? WHERE id = ?";
             PreparedStatement pstmt = conn.prepareStatement(dataSave);
 
-            pstmt.setString(1, nickname);
-            pstmt.setInt(2, best_score);
-            pstmt.setInt(3, coin);
-            pstmt.setBoolean(4, is_hard_ship);
-            pstmt.setBoolean(5, is_lucky_ship);
-            pstmt.setInt(6, HP_potion);
-            pstmt.setInt(7, speed_potion);
-            pstmt.setInt(8, selected_ship);
-            pstmt.setBoolean(9, is_first_play);
-            pstmt.setString(10, userID);
+            pstmt.setString(1, getNickname());
+            pstmt.setInt(2, getHighScore());
+            pstmt.setInt(3, getCoin());
+            pstmt.setBoolean(4, isHardShip());
+            pstmt.setBoolean(5, isLuckyShip());
+            pstmt.setInt(6, getHealPotion());
+            pstmt.setInt(7, getSpeedPotion());
+            pstmt.setInt(8, getSelectedShip());
+            pstmt.setBoolean(9, isFirstPlay());
+            pstmt.setString(10, getUserID());
 
             int updateResult = pstmt.executeUpdate();
 
@@ -234,13 +331,13 @@ public final class UserDB {
                     PreparedStatement pstmt = conn.prepareStatement(query);
 
                     pstmt.setString(1, glp.key.nicString);
-                    pstmt.setString(2, nickname);
+                    pstmt.setString(2, getNickname());
 
                     int result = pstmt.executeUpdate();
 
                     if (result > 0) {
                         glp.mu.registerSuccessState = true;
-                        nickname = glp.key.nicString;
+                        setNickname(glp.key.nicString);
                     }
                     pstmt.close();
                 } catch (SQLException ex) {

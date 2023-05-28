@@ -34,7 +34,7 @@ public class SoundPlayer {
         soundURL[19] = getClass().getResource("/sound/boss_shot.wav");
     }
 
-    public void setFile(int i){
+    private void setFile(int i){
         try {
             AudioInputStream ais = AudioSystem.getAudioInputStream(soundURL[i]);
             clip = AudioSystem.getClip();

@@ -3,8 +3,10 @@ package org.newdawn.spaceinvaders.entity;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 
+import org.newdawn.spaceinvaders.GameLobbyPanel;
 import org.newdawn.spaceinvaders.Sprite;
 import org.newdawn.spaceinvaders.SpriteStore;
+import org.newdawn.spaceinvaders.UserDB;
 
 /**
  * An entity represents any element that appears in the game. The
@@ -37,7 +39,7 @@ public abstract class Entity {
 	private int hp;
 	private boolean gotHit;
 
-
+	GameLobbyPanel glp;
 
 	/**
 	 * Construct a entity based on a sprite image and a location.

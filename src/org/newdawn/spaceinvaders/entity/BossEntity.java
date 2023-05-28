@@ -182,7 +182,7 @@ public class BossEntity extends Entity {
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
             if(!immortal){
-                hp--;
+                hp -= 10;
                 game.sp.playSE(10,5);
                 gotHit = true;
                 if(hp<=0){

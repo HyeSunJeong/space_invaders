@@ -41,10 +41,10 @@ public class MainUI extends JPanel {
     public boolean signOutConfirmState = false;
 
     //상점 가격
-    public static int healPotionPrice = 50;
-    public static int speedPotionPrice = 50;
-    public static int hardShipPrice = 1000;
-    public static int luckyShipPrice = 1500;
+    public static final int healPotionPrice = 50;
+    public static final int speedPotionPrice = 50;
+    public static final int hardShipPrice = 1000;
+    public static final int luckyShipPrice = 1500;
 
     public MainUI(GameLobbyPanel glp){
         this.glp = glp;
@@ -85,7 +85,7 @@ public class MainUI extends JPanel {
         }
     }
 
-    public void drawTitleScreen(){
+    private void drawTitleScreen(){
         setUpScreen(35f,Color.white);
         g2.drawImage(gameLogo_shadow,231,145,null);
         g2.drawImage(gameLogo,225,139,null);
@@ -101,12 +101,12 @@ public class MainUI extends JPanel {
 
         drawMenuButton("quit","Save and exit the game.",570,y,3);
 
-        if (UserDB.is_logged_in) drawMenuButton("sign out","Save the game and sign out.",575,88,4,true,20f);
+        if (glp.us.isLoggedIn()) drawMenuButton("sign out","Save the game and sign out.",575,88,4,true,20f);
 
         else drawMenuButton("to main","Go back to the lobby to sign in or sign up.",575,88,4,true,20f);
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,35f));
-        drawMenuButton(UserDB.nickname,"Change your nickname.",getXforCenteredText(UserDB.nickname),350,5);
+        drawMenuButton(glp.us.getNickname(),"Change your nickname.",getXforCenteredText(glp.us.getNickname()),350,5);
 
         showHighScore();
 
@@ -115,7 +115,7 @@ public class MainUI extends JPanel {
         }
     }
 
-    public void drawShopScreen(){
+    private void drawShopScreen(){
         setUpScreen(50f,Color.white);
         g2.drawImage(healPotion,113,273,70,70,null);
         g2.drawImage(speedPotion,269,273,70,70,null);
@@ -172,20 +172,20 @@ public class MainUI extends JPanel {
 
         x = 585;
         y = 135;
-        drawButton(Integer.toString(UserDB.coin),x,y,20f);
+        drawButton(Integer.toString(glp.us.getCoin()),x,y,20f);
 
         y = 490;
         drawButton("back to title",getXforCenteredText("back to title"),y,30f,Color.white,true,4);
 
         nx += 70;
         ny -= 30;
-        drawButton(Integer.toString(UserDB.HP_potion),nx,ny,25f);
+        drawButton(Integer.toString(glp.us.getHealPotion()),nx,ny,25f);
 
         nx += 160;
-        drawButton(Integer.toString(UserDB.speed_potion),nx,ny,25f);
+        drawButton(Integer.toString(glp.us.getSpeedPotion()),nx,ny,25f);
     }
 
-    public void drawUserScreen(){
+    private void drawUserScreen(){
         setUpScreen(50f,Color.white);
         g2.drawImage(healPotion,97,263,50,50,null);
         g2.drawImage(speedPotion,97,343,50,50,null);
@@ -213,10 +213,10 @@ public class MainUI extends JPanel {
 
         x = 170;
         y = 300;
-        drawButton(Integer.toString(UserDB.HP_potion),x,y,20f);
+        drawButton(Integer.toString(glp.us.getHealPotion()),x,y,20f);
 
         y += 80;
-        drawButton(Integer.toString(UserDB.speed_potion),x,y,20f);
+        drawButton(Integer.toString(glp.us.getSpeedPotion()),x,y,20f);
 
         x = 333;
         y = 378;
@@ -226,11 +226,11 @@ public class MainUI extends JPanel {
         drawUserState("basic ship","A basic ship. If you enjoy the difficulty, Try it!",x,y,0,basicShip,0,0,false);
 
         x += 140;
-        if (UserDB.is_hard_ship)
+        if (glp.us.isHardShip())
             drawUserState("hard ship","The hardness of steel.",x,y,1,hardShip,464,248,true);
 
         x += 135;
-        if (UserDB.is_lucky_ship)
+        if (glp.us.isLuckyShip())
             drawUserState("lucky ship","When using the skill , it becomes invincible.",x,y,2,luckShip,593,251,true);
 
         y = 490;
@@ -238,22 +238,22 @@ public class MainUI extends JPanel {
 
         EX += 80;
         EY -= 100;
-        if(UserDB.selected_ship == 0) {
+        if(glp.us.getSelectedShip() == 0) {
             drawBoldButton("E",EX,EY,25f,Color.cyan,false,0);
         }
 
         EX += 130;
-        if(UserDB.selected_ship == 1) {
+        if(glp.us.getSelectedShip() == 1) {
             drawButton("E",EX,EY,25f,Color.cyan,false,0);
         }
 
         EX += 130;
-        if(UserDB.selected_ship == 2) {
+        if(glp.us.getSelectedShip() == 2) {
             drawBoldButton("E",EX,EY,25f,Color.cyan,false,0);
         }
     }
 
-    public void drawInitialScreen(){
+    private void drawInitialScreen(){
         setUpScreen(30f,Color.white);
         g2.drawImage(gameLogo_shadow,231,145,null);
         g2.drawImage(gameLogo,225,139,null);
@@ -274,7 +274,7 @@ public class MainUI extends JPanel {
         drawButtonLight("quit",getXforCenteredText("quit"),y,30f,Color.gray,true,3);
     }
 
-    public void  drawSignInScreen() {
+    private void  drawSignInScreen() {
         setUpScreen(50f,Color.white);
 
         int x,y;
@@ -307,7 +307,7 @@ public class MainUI extends JPanel {
         showNotice(395);
     }
 
-    public void drawSignUpScreen(){
+    private void drawSignUpScreen(){
         setUpScreen(50f,Color.white);
 
         int x,y;
@@ -353,7 +353,7 @@ public class MainUI extends JPanel {
         showNotice(395);
     }
 
-    public void drawTutorialScreen(){
+    private void drawTutorialScreen(){
         g2.drawImage(tutorialWindow,0,0,null);
         g2.setFont(NeoDung);
 
@@ -366,7 +366,7 @@ public class MainUI extends JPanel {
         drawButton("back to title",getXforCenteredText("back to title"),y,30f,Color.white,true,1);
     }
 
-    public void drawChangeNickScreen(){
+    private void drawChangeNickScreen(){
         setUpScreen(50f,Color.white);
 
         int x,y;
@@ -390,7 +390,7 @@ public class MainUI extends JPanel {
         showNotice(340);
     }
 
-    public void drawDialogWindow(){
+    private void drawDialogWindow(){
         g2.drawImage(dialogWindow,0,0,null);
 
         g2.setFont(NeoDung);
@@ -418,21 +418,21 @@ public class MainUI extends JPanel {
 
 
     //문자열의 크기를 기반으로 텍스트가 화면 중앙에 위치하도록 X값을 잡아주는 함수
-    public int getXforCenteredText(String text){
+    private int getXforCenteredText(String text){
         int stringWidth = g2.getFontMetrics().stringWidth(text);
         int xCoordinate = (glp.screenWidth - stringWidth) / 2;
         return xCoordinate;
     }
 
     //문자열이 비밀번호처럼 *로 표기되게하는 메소드
-    public String getPasswordField(String pw){
+    private String getPasswordField(String pw){
         String field;
         field = new String(new char[pw.length()]).replace("\0","*");
         return field;
     }
 
     //선택된 옵션을 음영 + 삼각형으로 강조하기
-    public void selectOption(int x, int y, String text){
+    private void selectOption(int x, int y, String text){
         g2.drawImage(choiceButton,x - 32, y - 21,null);
         g2.setColor(Color.gray);
         g2.drawString(text,x,y);
@@ -441,7 +441,7 @@ public class MainUI extends JPanel {
     }
 
     //문자열에 이미지가 포함되어있을 때의 강조 옵션
-    public void selectOption(int x, int y, String text, boolean img){
+    private void selectOption(int x, int y, String text, boolean img){
         if (img) g2.drawImage(choiceButton,x - 30, y - 17,null);
         g2.setColor(Color.gray);
         g2.drawString(text,x,y);
@@ -451,12 +451,12 @@ public class MainUI extends JPanel {
     }
 
     //문자열이 아닌 이미지만을 강조
-    public void selectOptionOnlyImg(int x, int y){
+    private void selectOptionOnlyImg(int x, int y){
         g2.drawImage(choiceButton,x - 30, y - 19,null);
     }
 
     //음영이 아닌 밝게 하여 강조
-    public void selectOptionLight(int x, int y, String text){
+    private void selectOptionLight(int x, int y, String text){
         g2.drawImage(choiceButton,x - 30, y - 17,null);
         g2.setColor(Color.white);
         g2.drawString(text,x,y);
@@ -464,14 +464,14 @@ public class MainUI extends JPanel {
     }
 
     //이미지와 함께하는 문자열일 때 밝게 강조함
-    public void selectOptionLightWithImg(int x, int y, String text, boolean img){
+    private void selectOptionLightWithImg(int x, int y, String text, boolean img){
         if(img) g2.drawImage(choiceButton,x - 60, y - 17,null);
         g2.setColor(Color.yellow);
         g2.drawString(text,x,y);
     }
 
     //회색으로 표기되는 설명문
-    public void showExplanation(String text){
+    private void showExplanation(String text){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 15f));
         g2.setColor(Color.lightGray);
         int x = getXforCenteredText(text);
@@ -482,7 +482,7 @@ public class MainUI extends JPanel {
     }
 
     //다른 색, 위치, 폰트 크기로 표기되는 설명문
-    public void showExplanation(float fontsize, float fontsize2,Color c,int y, String text){
+    private void showExplanation(float fontsize, float fontsize2,Color c,int y, String text){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, fontsize));
         g2.setColor(c);
         int x = getXforCenteredText(text);
@@ -492,12 +492,12 @@ public class MainUI extends JPanel {
     }
 
     //하이스코어 표시
-    public void showHighScore(){
+    private void showHighScore(){
         String text;
         int x;
 
         DecimalFormat df = new DecimalFormat("###,###");
-        String scoreComma = df.format(UserDB.best_score);
+        String scoreComma = df.format(glp.us.getHighScore());
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
         text = "High Score: ";
         String scoreLength = text + scoreComma;
@@ -509,7 +509,7 @@ public class MainUI extends JPanel {
     }
 
     //경고문 표시
-    public void showNotice(int y){
+    private void showNotice(int y){
         String additionalText;
         if(unableLoginState) {
             additionalText = "Incorrect ID or Password!";
@@ -538,14 +538,14 @@ public class MainUI extends JPanel {
     }
 
     //문자 그리기
-    public void drawButton(String text, int x, int y, float fontSize){
+    private void drawButton(String text, int x, int y, float fontSize){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, fontSize));
         g2.setColor(Color.white);
         g2.drawString(text, x, y);
     }
 
     //선택 시 강조효과(음영)가 뜨는 문자
-    public void drawButton(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
+    private void drawButton(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, fontSize));
         g2.setColor(fontColor);
         g2.drawString(text, x, y);
@@ -555,7 +555,7 @@ public class MainUI extends JPanel {
     }
 
     //선택 시 강조효과(빛남)이 뜨는 문자
-    public void drawButtonLight(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
+    private void drawButtonLight(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, fontSize));
         g2.setColor(fontColor);
         g2.drawString(text, x, y);
@@ -565,7 +565,7 @@ public class MainUI extends JPanel {
     }
 
     //선택 시 삼각형만 뜨는 문자
-    public void drawButtonOnlyImg(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
+    private void drawButtonOnlyImg(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN, fontSize));
         g2.setColor(fontColor);
         g2.drawString(text, x, y);
@@ -575,7 +575,7 @@ public class MainUI extends JPanel {
     }
 
     //볼드체인 문자
-    public void drawBoldButton(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
+    private void drawBoldButton(String text, int x, int y, float fontSize, Color fontColor, boolean isCommand, int command){
         g2.setFont(g2.getFont().deriveFont(Font.BOLD, fontSize));
         g2.setColor(fontColor);
         g2.drawString(text, x, y);
@@ -585,7 +585,7 @@ public class MainUI extends JPanel {
     }
 
     //타이틀 화면 버튼 그리기
-    public void drawMenuButton(String text, String additionalText, int x, int y, int command){
+    private void drawMenuButton(String text, String additionalText, int x, int y, int command){
         g2.drawString(text,x,y);
         if(commandNum == command && !dialogState){
             selectOption(x,y,text);
@@ -594,7 +594,7 @@ public class MainUI extends JPanel {
     }
 
     //타이틀 화면 버튼 중 폰트조절이 필요한 것
-    public void drawMenuButton(String text, String additionalText, int x, int y, int command, boolean imgTrue,float fontSize){
+    private void drawMenuButton(String text, String additionalText, int x, int y, int command, boolean imgTrue,float fontSize){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,fontSize));
         g2.drawString(text, x,y);
         if(commandNum == command && !dialogState){
@@ -603,7 +603,7 @@ public class MainUI extends JPanel {
         }
     }
 
-    public void drawStartButton(){
+    private void drawStartButton(){
         String text = "start";
         String additionalText = "Start the game. There are a total of five stages and each stage has a boss. Good luck!";
         int x = 171;
@@ -612,7 +612,7 @@ public class MainUI extends JPanel {
         if(commandNum == 0 && !dialogState) {
             selectOption(x, y, text);
             showExplanation(additionalText);
-            switch (UserDB.selected_ship) {
+            switch (glp.us.getSelectedShip()) {
                 case 0:
                     g2.drawImage(basicShip, x + 20, y - 50, null);
                     break;
@@ -629,7 +629,7 @@ public class MainUI extends JPanel {
     }
 
     //상점 버튼 그리기
-    public void drawShopButton(String text, int x, int y, int command){
+    private void drawShopButton(String text, int x, int y, int command){
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,20f));
         g2.setColor(Color.white);
         g2.drawString(text,x, y);
@@ -639,7 +639,7 @@ public class MainUI extends JPanel {
     }
 
     //상점 가격표 그리기 & 경고문 표시
-    public void drawShopPrice(String text, String additionalText, int x, int y, int command){
+    private void drawShopPrice(String text, String additionalText, int x, int y, int command){
         g2.setColor(Color.white);
         g2.drawString(text,x,y);
         if(commandNum == command){
@@ -659,7 +659,7 @@ public class MainUI extends JPanel {
     }
 
     //상점 물품 중 우주선 가격표 그리기 & 경고문 표시
-    public void drawShopShipPrice(String text, String additionalText, int x, int y, int command){
+    private void drawShopShipPrice(String text, String additionalText, int x, int y, int command){
         g2.setColor(Color.white);
         g2.drawString(text,x, y);
         if(commandNum == command){
@@ -683,7 +683,7 @@ public class MainUI extends JPanel {
     }
 
     //유저창 버튼 그리기
-    public void drawUserState(String text, String additionalText, int x, int y, int command, BufferedImage ship, int imgX,int imgY, boolean img){
+    private void drawUserState(String text, String additionalText, int x, int y, int command, BufferedImage ship, int imgX,int imgY, boolean img){
         g2.drawString(text,x, y);
         if(img) g2.drawImage(ship,imgX,imgY,null);
         if(commandNum == command){
@@ -698,7 +698,7 @@ public class MainUI extends JPanel {
     }
 
     //화면 초기설정
-    public void setUpScreen(float fontSize, Color fontColor){
+    private void setUpScreen(float fontSize, Color fontColor){
         g2.drawImage(background,0,0,null);
         g2.setFont(NeoDung);
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,fontSize));
@@ -706,7 +706,7 @@ public class MainUI extends JPanel {
     }
 
     //폰트 로딩
-    public void loadFont(){
+    private void loadFont(){
         try {
             InputStream is = getClass().getResourceAsStream("/fonts/NeoDunggeunmoPro-Regular.ttf");
             NeoDung = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -716,7 +716,7 @@ public class MainUI extends JPanel {
     }
 
     //이미지 로딩
-    public void loadTitleImg() {
+    private void loadTitleImg() {
         try {
             background = loadImage("src/ui/computer_back.png");
             gameLogo = loadImage("src/ui/gamelogo.png");
