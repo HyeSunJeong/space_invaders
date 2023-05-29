@@ -103,7 +103,7 @@ public class Game extends Canvas
 	public SoundPlayer sp = new SoundPlayer();
 	long startTime = System.currentTimeMillis();
 	private Boolean bossAlive = false;
-	public int stage=3;
+	public int stage=5;
 
 	private boolean isStageUiOn = false;
 
@@ -194,12 +194,13 @@ public class Game extends Canvas
 	}
 	private void initEntities() {
 		addShip();
-//		AddAlien();
+		//addAlien();
 		addPlayerHpimg(ship.getHp());
 		addPlayerCoinimg();
 		addPlayerPotionimg();
 		showStageimg();
 		addBoss(100);
+		addBossHpBar(100);
 	}
 
 	public void showStageimg(){
@@ -419,7 +420,6 @@ public class Game extends Canvas
 		}
 
 	}
-
 	public void bossUltiLayer(int timer){
 		if (isBossAlive(!bossAlive)) return;
 		if((stage ==2)||(stage ==4) ||(stage==5) ){
@@ -615,7 +615,6 @@ public class Game extends Canvas
 				gi.setFont(glp.mu.NeoDung);
 
 				/** 시간**/
-
 				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(minutes) + ":" + String.valueOf(seconds), 377, 35);
 				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), "Score "+score, 29,35);
 				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(UserDB.coin), 710,70);
@@ -693,7 +692,6 @@ public class Game extends Canvas
 		gi.setFont(gi1);
 		gi.drawString(minutes, x, y);
 	}
-
 	private void bossPattern(long seconds) {
 		if (isBossAlive(!bossAlive)) return;
 		switch (stage){
@@ -701,7 +699,7 @@ public class Game extends Canvas
 				boss.doImmortal(seconds);
 				break;
 			case 2:
-				//BossUlti(timer);/**보스 공격패턴1**/
+				//bossUltiCos(timer);/**보스 공격패턴1**/
 				bossUltiLayer(timer);/**보스 공격패턴2**/
 				break;
 			case 3:
@@ -849,15 +847,15 @@ public class Game extends Canvas
 	public void loadBackImg() {
 		try {
 			//타이틀 이미지 로딩
-			InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get("src/sprites/window/round1_boss_window.png")));
+			InputStream is = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/sprites/window/round1_boss_window.png")));
 			round1 = ImageIO.read(is);
-			InputStream is2 = new BufferedInputStream(Files.newInputStream(Paths.get("src/sprites/window/round2_boss_window.png")));
+			InputStream is2 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/sprites/window/round2_boss_window.png")));
 			round2 = ImageIO.read(is2);
-			InputStream is3 = new BufferedInputStream(Files.newInputStream(Paths.get("src/sprites/window/round3_boss_window.png")));
+			InputStream is3 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/sprites/window/round3_boss_window.png")));
 			round3 = ImageIO.read(is3);
-			InputStream is4 = new BufferedInputStream(Files.newInputStream(Paths.get("src/sprites/window/round4_boss_window.png")));
+			InputStream is4 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/sprites/window/round4_boss_window.png")));
 			round4 = ImageIO.read(is4);
-			InputStream is5 = new BufferedInputStream(Files.newInputStream(Paths.get("src/sprites/window/round5_boss_window.png")));
+			InputStream is5 = new BufferedInputStream(Files.newInputStream(Paths.get("space_invaders/src/sprites/window/round5_boss_window.png")));
 			round5 = ImageIO.read(is5);
 		} catch (IOException e) {
 			e.printStackTrace();
