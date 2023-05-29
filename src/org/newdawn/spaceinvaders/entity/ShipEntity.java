@@ -43,7 +43,7 @@ public class ShipEntity extends Entity {
 	 * @param other The entity with which the ship has collided
 	 */
 	public void collidedWith(Entity other) {
-		if(immortal == true)return;
+		if(immortal)return;
 		if (other instanceof BossShotEntity ) {
 			this.hp--;
 			game.sp.playSE(11,-10f);

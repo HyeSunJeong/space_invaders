@@ -123,7 +123,7 @@ public class AlienEntity extends Entity {
 			double a = Math.random();
 			if(game.glp.us.getSelectedShip() ==2){
 				if(a>0.7){
-					game.SpawnCoin(this.getX(), this.getY());
+					game.spawnCoin(this.getX(), this.getY());
 				}
 			}
 			else {

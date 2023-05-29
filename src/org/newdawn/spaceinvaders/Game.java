@@ -103,7 +103,7 @@ public class Game extends Canvas
 	public SoundPlayer sp = new SoundPlayer();
 	long startTime = System.currentTimeMillis();
 	private Boolean bossAlive = false;
-	public int stage=3;
+	public int stage=1;
 
 	private boolean isStageUiOn = false;
 
@@ -123,25 +123,15 @@ public class Game extends Canvas
 	 */
 	public Game(GameLobbyPanel glp) {
 		this.glp = glp;
-		//UserDB.loggedIn();
-		/*GamePanel gp = (GamePanel) lf.getContentPane();
-		gp.setPreferredSize(new Dimension(800,600));
-		setBounds(0,0,800,600);
-		gp.add(this);*/
-		// create a frame to contain our game
 		container = new JFrame("Space Invaders 102");
 
-		// get hold the content of the frame and set up the resolution of the game
 		JPanel panel = (JPanel) container.getContentPane();
 		panel.setPreferredSize(new Dimension(800,600));
 		panel.setLayout(null);
 
-		// setup our canvas size and put it into the content of the frame
 		setBounds(0,0,800,600);
 		panel.add(this);
 
-		// Tell AWT not to bother repainting our canvas since we're
-		// going to do that our self in accelerated mode
 		//setIgnoreRepaint(true);
 
 		// finally make the window visible
@@ -150,28 +140,19 @@ public class Game extends Canvas
 		container.setResizable(false);
 		container.setVisible(true);
 
-		// add a listener to respond to the user closing the window. If they
-		// do we'd like to exit the game
 		container.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
 		});
 
-		// add a key input system (defined below) to our canvas
-		// so we can respond to key pressed
 		addKeyListener(new KeyInputHandler());
 
-		// request the focus so key events come to us
 		requestFocus();
 
-		// create the buffering strategy which will allow AWT
-		// to manage our accelerated graphics
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
 
-		// initialise the entities in our game so there's something
-		// to see at startup
 		loadBackImg();
 		initEntities();
 	}
@@ -194,12 +175,12 @@ public class Game extends Canvas
 	}
 	private void initEntities() {
 		addShip();
-//		AddAlien();
+		addAlien();
 		addPlayerHpimg(ship.getHp());
 		addPlayerCoinimg();
 		addPlayerPotionimg();
 		showStageimg();
-		addBoss(100);
+		//addBoss(100);
 	}
 
 	public void showStageimg(){
@@ -366,8 +347,8 @@ public class Game extends Canvas
 		}
 		// if there are still some aliens left then they all need to get faster, so
 		// speed up all the existing aliens
-		for (int i=0;i<entities.size();i++) {
-			Entity entity = (Entity) entities.get(i);
+		for (Object o : entities) {
+			Entity entity = (Entity) o;
 
 			if (entity instanceof AlienEntity) {
 				// speed up by 2%
@@ -384,7 +365,7 @@ public class Game extends Canvas
 		stage++;
 		score +=1000;
 		showStageimg();
-		if(bossAlive == false){
+		if(!bossAlive){
 			addAlien();
 		}
 		Entity entity = (Entity) entities.get(0);
@@ -442,11 +423,11 @@ public class Game extends Canvas
 	}
 
 	private void shotLayer(int timer) {
-		if(timer %111 ==0){
-			for(int i=-5; i<=5; i++){
+		if(timer %500 ==0){
+			for(int i=-4; i<=4; i++){
 				BossShotEntity shot = new BossShotEntity(this,"sprites/bossShot.png",boss.getX()+30,boss.getY()+100);
 				entities.add(shot);
-				shot.shotXMove(35*i,100);
+				shot.shotXMove(50*i,150);
 			}
 		}
 	}
@@ -554,16 +535,16 @@ public class Game extends Canvas
 
 				// cycle round asking each entity to move itself
 				if (!waitingForKeyPress) {
-					for (int i=0;i<entities.size();i++) {
-						Entity entity = (Entity) entities.get(i);
+					for (Object o : entities) {
+						Entity entity = (Entity) o;
 
 						entity.move(delta);
 					}
 				}
 
 				// cycle round drawing all the entities we have in the game
-				for (int i=0;i<entities.size();i++) {
-					Entity entity = (Entity) entities.get(i);
+				for (Object o : entities) {
+					Entity entity = (Entity) o;
 
 					entity.draw(g);
 				}
@@ -611,15 +592,15 @@ public class Game extends Canvas
 				/**물약 남은 수**/
 				ggi.setColor(Color.white);
 				Font font1 = new Font("OCR A Extended",Font.PLAIN,15);
-				printInformation(ggi, font1, String.valueOf(UserDB.HP_potion), 33, 580);
-				ggi.drawString(String.valueOf(UserDB.speed_potion),66,580);
+				printInformation(ggi, font1, String.valueOf(glp.us.getHealPotion()), 33, 580);
+				ggi.drawString(String.valueOf(glp.us.getSpeedPotion()),66,580);
 
 				gi.setColor(Color.white);
 				gi.setFont(glp.mu.NeoDung);
 
 				/** 시간**/
 
-				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(minutes) + ":" + String.valueOf(seconds), 377, 35);
+				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), minutes + ":" + seconds, 377, 35);
 				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), "Score "+score, 29,35);
 				printInformation(gi, gi.getFont().deriveFont(Font.PLAIN, 25f), String.valueOf(glp.us.getCoin()), 710,70);
 
@@ -712,11 +693,15 @@ public class Game extends Canvas
 				break;
 			case 4:
 				boss.doReflect(seconds);
-				reflectTime();
+				boss.ReflectCheck(timer);
+				bossUltiCos(timer);
+				//reflectTime();
 				break;
 			case 5:
 				boss.doReflect(seconds);
-				reflectTime();
+				bossUltiLayer(timer);
+				boss.ReflectCheck(timer);
+				//reflectTime();
 				break;
 		}
 	}
@@ -728,7 +713,7 @@ public class Game extends Canvas
 	}
 
 	public void removeRoundUi(){
-		if (isBossAlive(isStageUiOn == false)) return;
+		if (isBossAlive(!isStageUiOn)) return;
 		for(int i=0; i<5; i++){
 			removeEntity(stageUI);
 		}
@@ -910,7 +895,7 @@ public class Game extends Canvas
 			if (e.getKeyChar() == 'z'){
 				useHealPotion(ship.getHp());
 			}
-			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				escPressed = true;
 			}
 			if (e.getKeyChar() == 'c'){
@@ -938,7 +923,7 @@ public class Game extends Canvas
 			if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 				firePressed = false;
 			}
-			if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				escPressed = false;
 			}
 		}
@@ -969,9 +954,9 @@ public class Game extends Canvas
 			}
 
 			// if we hit escape, then quit the game
-			if (e.getKeyChar() == 27) {
+			/*if (e.getKeyChar() == 27) {
 				System.exit(0);
-			}
+			}*/
 		}
 	}
 	/**

@@ -42,40 +42,44 @@ public class BossEntity extends Entity {
     public boolean reflect =false;
     public BossEntity(Game game,int x,int y) {
         super("sprites/round1_alien.png",x,y);
-        if(game.stage ==1){
-            sprite = SpriteStore.get().getSprite("sprites/round1_alien.png");
-            frames[0] = SpriteStore.get().getSprite("sprites/round1_alien.png");
-            frames[1] = SpriteStore.get().getSprite("sprites/round1_alien.png");
-            hitFrame = SpriteStore.get().getSprite("sprites/round1_alien_shot.png");
-            godFrame = SpriteStore.get().getSprite("sprites/round1_alien_ skill.png");
-        }
-        else if (game.stage==2){
-            sprite = SpriteStore.get().getSprite("sprites/round2_alien.png");
-            frames[0] = SpriteStore.get().getSprite("sprites/round2_alien.png");
-            frames[1] = SpriteStore.get().getSprite("sprites/round2_alien.png");
-            hitFrame = SpriteStore.get().getSprite("sprites/round2_alien_shot.png");
-        }
-        else if(game.stage ==3){
-            sprite = SpriteStore.get().getSprite("sprites/round3_alien.png");
-            frames[0] = SpriteStore.get().getSprite("sprites/round3_alien.png");
-            frames[1] = SpriteStore.get().getSprite("sprites/round3_alien.png");
-            hitFrame = SpriteStore.get().getSprite("sprites/round3_alien_shot.png");
-            godFrame = SpriteStore.get().getSprite("sprites/round3_alien_skill.png");
-        }
-        else if(game.stage ==4){
-            sprite = SpriteStore.get().getSprite("sprites/round4_alien.png");
-            frames[0] = SpriteStore.get().getSprite("sprites/round4_alien.png");
-            frames[1] = SpriteStore.get().getSprite("sprites/round4_alien.png");
-            hitFrame = SpriteStore.get().getSprite("sprites/round4_alien_shot.png");
-            reflectFrame = SpriteStore.get().getSprite("sprites/round4_alien_skill.png");
-        }
-        else {
-            sprite =  SpriteStore.get().getSprite("sprites/round5_alien.png");
-            frames[0] = SpriteStore.get().getSprite("sprites/round5_alien.png");
-            frames[1] = SpriteStore.get().getSprite("sprites/round5_alien.png");
-            hitFrame = SpriteStore.get().getSprite("sprites/round5_alien_shot.png");
-            godFrame = SpriteStore.get().getSprite("sprites/round5_alien_skill1.png");
-            reflectFrame = SpriteStore.get().getSprite("sprites/round5_alien_skill2.png");
+        try {
+            if(game.stage ==1){
+                sprite = SpriteStore.get().getSprite("sprites/round1_alien.png");
+                frames[0] = SpriteStore.get().getSprite("sprites/round1_alien.png");
+                frames[1] = SpriteStore.get().getSprite("sprites/round1_alien.png");
+                hitFrame = SpriteStore.get().getSprite("sprites/round1_alien_shot.png");
+                godFrame = SpriteStore.get().getSprite("sprites/round1_alien_ skill.png");
+            }
+            else if (game.stage==2){
+                sprite = SpriteStore.get().getSprite("sprites/round2_alien.png");
+                frames[0] = SpriteStore.get().getSprite("sprites/round2_alien.png");
+                frames[1] = SpriteStore.get().getSprite("sprites/round2_alien.png");
+                hitFrame = SpriteStore.get().getSprite("sprites/round2_alien_shot.png");
+            }
+            else if(game.stage ==3){
+                sprite = SpriteStore.get().getSprite("sprites/round3_alien.png");
+                frames[0] = SpriteStore.get().getSprite("sprites/round3_alien.png");
+                frames[1] = SpriteStore.get().getSprite("sprites/round3_alien.png");
+                hitFrame = SpriteStore.get().getSprite("sprites/round3_alien_shot.png");
+                godFrame = SpriteStore.get().getSprite("sprites/round3_alien_skill.png");
+            }
+            else if(game.stage ==4){
+                sprite = SpriteStore.get().getSprite("sprites/round4_alien.png");
+                frames[0] = SpriteStore.get().getSprite("sprites/round4_alien.png");
+                frames[1] = SpriteStore.get().getSprite("sprites/round4_alien.png");
+                hitFrame = SpriteStore.get().getSprite("sprites/round4_alien_shot.png");
+                reflectFrame = SpriteStore.get().getSprite("sprites/round4_alien_skill.png");
+            }
+            else {
+                sprite =  SpriteStore.get().getSprite("sprites/round5_alien.png");
+                frames[0] = SpriteStore.get().getSprite("sprites/round5_alien.png");
+                frames[1] = SpriteStore.get().getSprite("sprites/round5_alien.png");
+                hitFrame = SpriteStore.get().getSprite("sprites/round5_alien_shot.png");
+                godFrame = SpriteStore.get().getSprite("sprites/round5_alien_skill1.png");
+                reflectFrame = SpriteStore.get().getSprite("sprites/round5_alien_skill2.png");
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
         this.game = game;
@@ -107,19 +111,19 @@ public class BossEntity extends Entity {
             sprite = frames[frameNumber];
 
             // 보스가 피격상태일 경우
-            if (gotHit == true)
+            if (gotHit)
             {
                 sprite = hitFrame;
             }
 
             //보스가 무적 상태일 경우
-            else if(immortal ==true){
+            else if(immortal){
                 sprite = godFrame;
             }
 
             //보스가 반사 상태일 경우
             gotHit = false;
-            if(reflect ==true&&immortal ==true){
+            if(reflect&&immortal){
                 sprite = reflectFrame;
             }
         }
@@ -151,7 +155,7 @@ public class BossEntity extends Entity {
     }
     public void doImmortal(long second){
         int immortalTime = 2;
-        if(second %10 ==0 && immortal == false && second !=0){
+        if(second %10 ==0 && !immortal && second !=0){
             immortal = true;
             startImmortalTime = second;
         }
@@ -161,7 +165,7 @@ public class BossEntity extends Entity {
     }
     public void doReflect(long second){
         int reflectTime = 2;
-        if(second %2 ==0 && reflect == false && second !=0){
+        if(second %2 ==0 && !reflect && second !=0){
             reflect = true;
             startReflectTime = second;
         }
@@ -197,7 +201,7 @@ public class BossEntity extends Entity {
      */
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
-            if(!immortal || !reflect){
+            if(!immortal){
                 hp--;
                 game.sp.playSE(10,5);
                 gotHit = true;
