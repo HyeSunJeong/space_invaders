@@ -1,7 +1,6 @@
 package org.newdawn.spaceinvaders.gameui;
 
 import org.newdawn.spaceinvaders.GameLobbyPanel;
-import org.newdawn.spaceinvaders.UserDB;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

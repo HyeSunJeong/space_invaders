@@ -2,7 +2,6 @@ package org.newdawn.spaceinvaders.gameui;
 
 import org.newdawn.spaceinvaders.Game;
 import org.newdawn.spaceinvaders.GameLobbyPanel;
-import org.newdawn.spaceinvaders.UserDB;
 
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -598,7 +597,7 @@ public class UIKeyHandler extends KeyAdapter {
     }
 
     //스테이지 시작
-    public void startGame(){
+    private void startGame(){
         glp.sp.stopMusic(2);
         glp.gameState = glp.inGameState;
         glp.us.setFirstPlay(false);

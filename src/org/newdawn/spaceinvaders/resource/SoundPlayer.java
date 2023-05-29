@@ -43,20 +43,16 @@ public class SoundPlayer {
             throw new RuntimeException(e);
         }
     }
-
     private void play(){
         clip.start();
     }
-
     private void loop(){
         clip.loop(Clip.LOOP_CONTINUOUSLY);
     }
-
     private void stop(){
         clip.stop();
         clip.close();
     }
-
     public void playMusic(int i, float volume){
         setFile(i);
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -64,12 +60,10 @@ public class SoundPlayer {
         play();
         loop();
     }
-
     public void stopMusic(int i){
         setFile(i);
         stop();
     }
-
     public void playSE(int i, float volume){
         setFile(i);
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
