@@ -31,14 +31,15 @@ public class BossEntity extends Entity {
 
     public int hp;
 
-    public Boolean immortal =false;
+    public boolean immortal =false;
 
     public Boolean gotHit=false;
 
     private int frameNumber;
+    long startImmortalTime;
+    long startReflectTime;
 
-    public Boolean reflect =false;
-
+    public boolean reflect =false;
     public BossEntity(Game game,int x,int y) {
         super("sprites/round1_alien.png",x,y);
         if(game.stage ==1){
@@ -148,13 +149,24 @@ public class BossEntity extends Entity {
             game.notifyDeath();
         }
     }
-    public void ImmortallityCheck(int timer){
-        if(timer %800 ==0){
+    public void doImmortal(long second){
+        int immortalTime = 2;
+        if(second %10 ==0 && immortal == false && second !=0){
             immortal = true;
-            game.sp.playSE(9,0);
+            startImmortalTime = second;
         }
-        else if(timer %1000 == 0){
+        if(second - startImmortalTime > immortalTime){
             immortal = false;
+        }
+    }
+    public void doReflect(long second){
+        int reflectTime = 2;
+        if(second %2 ==0 && reflect == false && second !=0){
+            reflect = true;
+            startReflectTime = second;
+        }
+        if(second - startReflectTime > reflectTime){
+            reflect = false;
         }
     }
     public void ReflectCheck(int timer){
@@ -174,6 +186,10 @@ public class BossEntity extends Entity {
     public boolean getHit(){return  gotHit;}
     public void setHit(boolean hit){this.gotHit = hit;}
 
+    public boolean getImmortal(){return immortal;}
+    public boolean getReflect(){return  reflect;}
+
+
     /**
      * Notification that the player's ship has collided with something
      *
@@ -181,8 +197,8 @@ public class BossEntity extends Entity {
      */
     public void collidedWith(Entity other) {
         if (other instanceof ShotEntity) {
-            if(!immortal){
-                hp -= 10;
+            if(!immortal || !reflect){
+                hp--;
                 game.sp.playSE(10,5);
                 gotHit = true;
                 if(hp<=0){
@@ -191,6 +207,7 @@ public class BossEntity extends Entity {
                 }
             }
             else if(reflect){
+                System.out.println("dd");
                 game.bossReflectStart();
             }
         }

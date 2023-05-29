@@ -13,8 +13,6 @@ public class ShipEntity extends Entity {
 	private Game game;
 	private int hp=5;
 	private boolean gotHit;
-	
-
 	public ShipEntity(Game game,String ref,int x,int y) {
 		super(ref,x,y);
 		
@@ -45,6 +43,7 @@ public class ShipEntity extends Entity {
 	 * @param other The entity with which the ship has collided
 	 */
 	public void collidedWith(Entity other) {
+		if(immortal == true)return;
 		if (other instanceof BossShotEntity ) {
 			this.hp--;
 			game.sp.playSE(11,-10f);

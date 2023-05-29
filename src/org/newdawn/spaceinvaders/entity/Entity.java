@@ -40,6 +40,9 @@ public abstract class Entity {
 	private boolean gotHit;
 
 	GameLobbyPanel glp;
+	public boolean immortal;
+	public boolean reflect;
+
 
 	/**
 	 * Construct a entity based on a sprite image and a location.
@@ -113,7 +116,6 @@ public abstract class Entity {
 	 */
 	public void doLogic() {
 	}
-	public void ImmortallityCheck(int timer){}
 
 	public void ReflectCheck(int timer){}
 
@@ -141,6 +143,12 @@ public abstract class Entity {
 
 	public boolean getHit(){return  gotHit;}
 	public void setHit(boolean hit){this.gotHit = hit;}
+	public void doImmortal(long second){
+	}
+	public void doReflect(long second){}
+	public boolean getImmortal(){return immortal;}
+	public boolean getReflect(){return reflect;}
+	public void setImmortal(boolean imt){this.immortal = imt;}
 
 	/**
 	 * Check if this entity collised with another.

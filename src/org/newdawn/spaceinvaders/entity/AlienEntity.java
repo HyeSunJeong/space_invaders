@@ -128,7 +128,7 @@ public class AlienEntity extends Entity {
 			}
 			else {
 				if(a>0.5){
-					game.SpawnCoin(this.getX(), this.getY());
+					game.spawnCoin(this.getX(), this.getY());
 				}
 			}
 		}
